@@ -533,6 +533,11 @@ body.full .card-visual figcaption b{color:var(--on-dark)}
 .form .done{display:grid;gap:10px;text-align:center;padding:12px 0}
 .form .done b{font-size:22px}
 
+/* 공통 리빌: 화면에 15% 들어올 때 1회, transform·opacity만 (레이아웃 영향 없음) */
+[data-reveal]{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease;transition-delay:var(--rd,0ms)}
+[data-reveal="img"]{transform:scale(1.03);transition-duration:.8s}
+[data-reveal].in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){[data-reveal]{opacity:1;transform:none;transition:none}}
 /* footer */
 .closing{padding-block:clamp(32px,5vw,56px);background:#0B0A09}
 .closing-board{margin:0 auto;max-width:1000px}
@@ -542,7 +547,7 @@ body.full .card-visual figcaption b{color:var(--on-dark)}
 footer{padding-block:36px;font-size:13px;color:var(--muted);border-top:1px solid var(--line)}
 footer .links{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px}
 footer a{text-decoration:none}
-footer>.wrap>img{height:44px;width:auto;margin-bottom:16px;opacity:.9}
+footer>.wrap>img{height:52px;width:auto;margin-bottom:18px;opacity:.95}
 @media (max-width:640px){footer>.wrap>img{height:36px}}
 footer .awards{display:flex;gap:28px;flex-wrap:wrap;margin:6px 0 18px}
 footer .awards figure{display:flex;align-items:center;gap:12px;margin:0}
@@ -1427,6 +1432,25 @@ function setupVoice() {
   document.addEventListener('visibilitychange', () => { if (document.hidden && VOICE.mode === 'tts' && VOICE.state === 'playing') voiceToggle(VOICE.box); });
 }
 
+// 리빌 대상 지정 + 관찰. 렌더 후마다 scan() 재호출 가능
+const REVEAL = { io: null, mobile: matchMedia('(max-width:860px)').matches };
+function revealScan() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const mark = (sel, step, limit = 8) => document.querySelectorAll(sel).forEach(parent => {
+    [...parent.children].forEach((el, i) => { if (el.hasAttribute('data-reveal')) return; el.setAttribute('data-reveal', ''); el.style.setProperty('--rd', Math.min(i, limit) * (REVEAL.mobile ? step / 2 : step) + 'ms'); });
+  });
+  mark('.band .sec-title', 80);                     // 섹션 타이틀: eyebrow → h2 → 설명
+  mark('#productGrid', 60); mark('#bnCards', 60); mark('#bnTiles', 50); mark('#courseGrid', 60); mark('.evt', 60);
+  mark('.cond', 50); mark('.corp-cols', 70); mark('#faqList', 40, 6); mark('.faq-tabs', 30, 8);
+  document.querySelectorAll('.mgr-wrap img.mgr-photo, .corp-ad img, .promo-poster img, .sec-person img, .closing img, .reviews > *').forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', 'img'); });
+  // 자료 받기 폼·담당자 본문
+  document.querySelectorAll('#manager .lead, #manager .phone, #manager .namecard, #leadForm').forEach(el => { if (!el.hasAttribute('data-reveal')) el.setAttribute('data-reveal', ''); });
+  if (!('IntersectionObserver' in window)) { document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('in')); return; }
+  if (!REVEAL.io) REVEAL.io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); REVEAL.io.unobserve(en.target); } }), { threshold: .15, rootMargin: '0px 0px -5% 0px' });
+  document.querySelectorAll('[data-reveal]:not(.in)').forEach(el => REVEAL.io.observe(el));
+  // 앵커 점프 등으로 화면을 지나쳐 버린 요소는 즉시 표시
+  if (!REVEAL.scroll) { REVEAL.scroll = true; let t = 0; addEventListener('scroll', () => { if (t) return; t = setTimeout(() => { t = 0; document.querySelectorAll('[data-reveal]:not(.in)').forEach(el => { if (el.getBoundingClientRect().bottom < 0) el.classList.add('in'); }); }, 120); }, { passive: true }); }
+}
 function countUp() {
   const lg = document.getElementById('logoStats'), hero = document.getElementById('hero'), band = document.getElementById('brand'), hdr = document.querySelector('header');
   if (!lg || !hero) return;
@@ -1508,7 +1532,9 @@ window.__SITE_FALLBACK__ = {"branch":{"name":"퍼시픽링스코리아 수도권
   init();
   DATA = await loadData();
   FAQ = await loadFaq();
-  renderTabs(); renderProducts(); renderCourses(); renderEvents(); renderFaq(); renderBenefits(); renderSectionVoices();
+  renderTabs(); renderProducts(); renderCourses(); renderEvents(); renderFaq(); renderBenefits(); renderSectionVoices(); revealScan();
+  new MutationObserver(() => revealScan()).observe(document.getElementById('productGrid'), { childList: true });
+  new MutationObserver(() => revealScan()).observe(document.getElementById('faqList'), { childList: true });
   if (DATA.branch && DATA.branch.priceAsOf) document.getElementById('priceAsOf').textContent = DATA.branch.priceAsOf.replace(/-/g, '.');
   const pr = DATA.promo || {};
   const expired = pr.until && new Date(pr.until + 'T23:59:59') < new Date();
