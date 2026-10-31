@@ -1,0 +1,17 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# build / temp
+*.zip
+dl/
+_tmp/
+node_modules/
+__pycache__/
+*.pyc
+
+# local env
+.env
+*.local
