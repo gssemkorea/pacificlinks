@@ -94,23 +94,49 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .hero-person{justify-self:end;align-self:end;width:min(440px,100%);max-height:620px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 24px 36px rgba(0,0,0,.5));margin-bottom:calc(-1 * clamp(48px,7vw,88px))}
 @media (max-width:860px){.hero-person{justify-self:center;width:min(300px,78%);margin-bottom:calc(-1 * clamp(48px,7vw,88px))}}
 
-/* stats panel: floats over the hero's bottom edge */
-.stats{position:relative;z-index:2;margin-top:-48px}
-.stats-panel{display:grid;grid-template-columns:repeat(4,1fr);background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 50px rgba(10,30,56,.18);overflow:hidden}
-.stats-panel>div{position:relative;padding:26px 24px 22px;display:grid;gap:4px;border-left:1px solid var(--line)}
-.stats-panel>div:first-child{border-left:0}
-.stats-panel>div::before{content:"";position:absolute;left:24px;top:0;width:44px;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-light));border-radius:0 0 3px 3px}
-.stats-panel b{font-family:var(--latin);font-weight:700;font-size:clamp(30px,3.4vw,42px);line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;background:linear-gradient(90deg,var(--blue),var(--blue-light));-webkit-background-clip:text;background-clip:text;color:transparent;display:flex;align-items:baseline;gap:4px}
-.stats-panel b i{font-style:normal;font-family:var(--body);font-size:15px;font-weight:700;color:var(--blue);-webkit-text-fill-color:var(--blue)}
-.stats-panel span{font-size:15px;font-weight:700;color:var(--fg)}
-.stats-panel small{font-size:12.5px;color:var(--muted)}
-@media (max-width:860px){.stats{margin-top:-28px}.stats-panel{grid-template-columns:1fr 1fr}.stats-panel>div{padding:20px 18px 16px}.stats-panel>div:nth-child(3){border-left:0}.stats-panel>div:nth-child(n+3){border-top:1px solid var(--line)}}
-body.full .stats-panel{background:rgba(8,18,30,.78);backdrop-filter:blur(10px);border-color:rgba(255,255,255,.12)}
-body.full .stats-panel span{color:var(--on-dark)}
-body.full .stats-panel small{color:var(--on-dark-muted)}
-body.full .stats-panel>div{border-color:rgba(255,255,255,.1)}
-body.full .stats-panel b{background:linear-gradient(90deg,#9CC7EE,#fff);-webkit-background-clip:text;background-clip:text}
-body.full .stats-panel b i{color:#9CC7EE;-webkit-text-fill-color:#9CC7EE}
+/* ===== 로고 지표 밴드: 고리는 벡터(원본 측정값), 리본은 사진 패턴 스트로크, 완성 시 원본 PNG로 교체 ===== */
+.logo-band{background:radial-gradient(1100px 520px at 50% 0,#17406E,#0B1C33 72%);color:#fff;padding:34px 0 30px;position:relative;z-index:2}
+.lg{position:relative;width:min(100%,860px);margin:0 auto;container-type:inline-size}
+.lg-svg{display:block;width:100%;height:auto;overflow:visible}
+.lg .arc{fill:none;stroke-width:68;stroke-linecap:butt;stroke-dasharray:288;stroke-dashoffset:288}
+.lg .ink.lt,.lg .fin.lt{stroke:#68ABE4}.lg .ink.dk,.lg .fin.dk{stroke:#16599E}
+.lg .fin{fill:none;stroke-width:68}
+.lg .final{display:none}
+.lg .word{opacity:0;transform:translateY(12px)}
+.lg.play .word{animation:lgRise .6s ease-out 2.3s forwards}
+.lg.done .word{opacity:1;transform:none;clip-path:none;animation:none}
+.lg.done .segs{display:none}
+@keyframes lgRise{to{opacity:1;transform:none}}
+@keyframes lgFade{to{opacity:1}}
+@keyframes lgDraw{to{stroke-dashoffset:0}}
+.lg .dk.s1{--dd:0s}.lg .dk.s2{--dd:.55s}.lg .dk.s3{--dd:1.1s}
+.lg .lt.s1{--dd:.28s}.lg .lt.s2{--dd:.83s}.lg .lt.s3{--dd:1.38s}
+.lg.play .arc{animation:lgDraw .55s linear var(--dd) forwards}
+.lg .ph.sharp{opacity:0}
+.lg.play .ph.sharp{animation:lgDraw .55s linear var(--dd) forwards,lgFade 1.1s cubic-bezier(.3,0,.2,1) var(--dd) forwards}
+.lg .ink{opacity:.3}
+.lg.play .ink{animation:lgDraw .55s linear var(--dd) forwards,lgFade .6s ease-in 2s forwards}
+.lg .hole{position:absolute;top:31.55%;width:15.7%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1;padding:0 4%;opacity:0;color:#fff}
+.lg .hole.h1{left:25.2%}.lg .hole.h2{left:50.07%}.lg .hole.h3{left:74.93%}
+.lg .hole b{overflow-wrap:normal;white-space:nowrap;font-family:var(--latin);font-weight:800;font-size:3.9cqw;letter-spacing:-.03em;font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:.15em;background:none;-webkit-text-fill-color:#fff;color:#fff}
+.lg .hole b i{font-style:normal;font-size:1.35cqw;font-weight:700;font-family:var(--body);letter-spacing:0;color:#fff;-webkit-text-fill-color:#fff}
+.lg .hole>span{font-size:1.5cqw;font-weight:700;margin-top:.6cqw;white-space:nowrap}
+.lg .hole small{font-size:1.15cqw;opacity:.72;margin-top:.45cqw;white-space:nowrap}
+.lg.play .hole{animation:lgFade .5s ease-out forwards}
+.lg.play .h1{animation-delay:2s}.lg.play .h2{animation-delay:2.15s}.lg.play .h3{animation-delay:2.3s}
+.lg.done .hole{opacity:1;animation:none}
+.lg-tag{text-align:center;margin:14px 0 0;font-size:14px;color:#B5C4D6}
+.lg-tag b{font-family:var(--latin);letter-spacing:.3em;font-size:12px;color:#9CC7EE;margin-right:10px}
+.lg-row{display:none;justify-content:center;gap:22px;margin:14px 0 0;padding:0;list-style:none;text-align:center}
+.lg-row li b{display:block;font-family:var(--latin);font-size:22px;font-weight:800}
+.lg-row li b i{font-style:normal;font-size:12px;font-family:var(--body);margin-left:3px}
+.lg-row li span{font-size:12.5px;color:#B5C4D6}
+@media (max-width:720px){.lg .hole small{display:none}.lg .hole>span{font-size:1.7cqw}.lg .hole b{font-size:4.6cqw}}
+@media (max-width:520px){.lg .hole{display:none}.lg-row{display:flex}.lg-tag{font-size:12.5px}}
+@media (prefers-reduced-motion:reduce){.lg .segs{display:none}.lg .word{opacity:1;transform:none;clip-path:none;animation:none}.lg .hole{opacity:1;animation:none}}
+/* 검증용: ?logocheck → 원본 PNG를 50%로 겹쳐 보기 */
+.lg .lg-check{display:none;position:absolute;inset:0;width:100%;height:auto;opacity:.5;pointer-events:none;mix-blend-mode:difference}
+body.logocheck .lg .lg-check{display:block}
 /* trust strip (legacy) */
 .strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .strip div{padding:18px 0;border-top:1px solid var(--line)}
@@ -615,14 +641,76 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
     </div>
   </section>
 
-  <section class="stats" aria-label="신뢰">
+  <section class="band logo-band" id="brand" aria-label="신뢰">
     <div class="wrap">
-      <div class="stats-panel">
-        <div><b><span class="n" data-count="276">276</span><i>곳</i></b><span>국내 제휴 골프장</span><small>서울·경기·인천·강원·충청</small></div>
-        <div><b><span class="n" data-count="1000">1,000</span><i>+</i></b><span>해외 제휴 코스</span><small>50여 개국, 그린피 $60</small></div>
-        <div><b><span class="n">2009</span><i>년</i></b><span>퍼시픽링스 창립</span><small>캐나다 · 글로벌 멤버십</small></div>
-        <div><b><span class="n">2</span><i>년 연속</i></b><span>스타브랜드 대상</span><small>골프멤버십 부문</small></div>
+      <div class="lg" id="logoStats">
+<svg class="lg-svg" viewBox="0 0 726 401" aria-hidden="true">
+  <defs>
+    <clipPath id="nogap-lg"><rect x="0" y="0" width="726" height="121.5"/><rect x="0" y="131.5" width="726" height="270"/></clipPath>
+    <clipPath id="w-lg"><rect x="0" y="262" width="726" height="139"/></clipPath>
+    <pattern id="p1lt-lg" patternUnits="userSpaceOnUse" x="58" y="1.5" width="250" height="250"><image href="img/logo/p1-lt.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p1ltblur-lg" patternUnits="userSpaceOnUse" x="58" y="1.5" width="250" height="250"><image href="img/logo/p1-lt-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p1dk-lg" patternUnits="userSpaceOnUse" x="58" y="1.5" width="250" height="250"><image href="img/logo/p1-dk.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p1dkblur-lg" patternUnits="userSpaceOnUse" x="58" y="1.5" width="250" height="250"><image href="img/logo/p1-dk-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p2lt-lg" patternUnits="userSpaceOnUse" x="238.5" y="1.5" width="250" height="250"><image href="img/logo/p2-lt.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p2ltblur-lg" patternUnits="userSpaceOnUse" x="238.5" y="1.5" width="250" height="250"><image href="img/logo/p2-lt-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p2dk-lg" patternUnits="userSpaceOnUse" x="238.5" y="1.5" width="250" height="250"><image href="img/logo/p2-dk.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p2dkblur-lg" patternUnits="userSpaceOnUse" x="238.5" y="1.5" width="250" height="250"><image href="img/logo/p2-dk-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p3lt-lg" patternUnits="userSpaceOnUse" x="419" y="1.5" width="250" height="250"><image href="img/logo/p3-lt.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p3ltblur-lg" patternUnits="userSpaceOnUse" x="419" y="1.5" width="250" height="250"><image href="img/logo/p3-lt-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p3dk-lg" patternUnits="userSpaceOnUse" x="419" y="1.5" width="250" height="250"><image href="img/logo/p3-dk.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p3dkblur-lg" patternUnits="userSpaceOnUse" x="419" y="1.5" width="250" height="250"><image href="img/logo/p3-dk-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    </defs>
+  <!-- 사슬 순서(아래→위): 3번 위, 2번 위, 1번 위, 1번 아래, 2번 아래, 3번 아래. 구간마다 흐린 사진·선명 사진·색 리본 세 겹을 같은 선으로 그림 -->
+  <g class="segs" clip-path="url(#nogap-lg)">
+    <g class="seg r3 lt s3">
+      <path class="arc ph blur" d="M452.5 126.5A91.5 91.5 0 0 1 635.5 126.5" stroke="url(#p3ltblur-lg)"/>
+      <path class="arc ph sharp" d="M452.5 126.5A91.5 91.5 0 0 1 635.5 126.5" stroke="url(#p3lt-lg)"/>
+      <path class="arc ink lt" d="M452.5 126.5A91.5 91.5 0 0 1 635.5 126.5"/>
+    </g>
+    <g class="seg r2 dk s2">
+      <path class="arc ph blur" d="M272 126.5A91.5 91.5 0 0 1 455 126.5" stroke="url(#p2dkblur-lg)"/>
+      <path class="arc ph sharp" d="M272 126.5A91.5 91.5 0 0 1 455 126.5" stroke="url(#p2dk-lg)"/>
+      <path class="arc ink dk" d="M272 126.5A91.5 91.5 0 0 1 455 126.5"/>
+    </g>
+    <g class="seg r1 lt s1">
+      <path class="arc ph blur" d="M91.5 126.5A91.5 91.5 0 0 1 274.5 126.5" stroke="url(#p1ltblur-lg)"/>
+      <path class="arc ph sharp" d="M91.5 126.5A91.5 91.5 0 0 1 274.5 126.5" stroke="url(#p1lt-lg)"/>
+      <path class="arc ink lt" d="M91.5 126.5A91.5 91.5 0 0 1 274.5 126.5"/>
+    </g>
+    <g class="seg r1 dk s1">
+      <path class="arc ph blur" d="M91.5 126.5A91.5 91.5 0 0 0 274.5 126.5" stroke="url(#p1dkblur-lg)"/>
+      <path class="arc ph sharp" d="M91.5 126.5A91.5 91.5 0 0 0 274.5 126.5" stroke="url(#p1dk-lg)"/>
+      <path class="arc ink dk" d="M91.5 126.5A91.5 91.5 0 0 0 274.5 126.5"/>
+    </g>
+    <g class="seg r2 lt s2">
+      <path class="arc ph blur" d="M272 126.5A91.5 91.5 0 0 0 455 126.5" stroke="url(#p2ltblur-lg)"/>
+      <path class="arc ph sharp" d="M272 126.5A91.5 91.5 0 0 0 455 126.5" stroke="url(#p2lt-lg)"/>
+      <path class="arc ink lt" d="M272 126.5A91.5 91.5 0 0 0 455 126.5"/>
+    </g>
+    <g class="seg r3 dk s3">
+      <path class="arc ph blur" d="M452.5 126.5A91.5 91.5 0 0 0 635.5 126.5" stroke="url(#p3dkblur-lg)"/>
+      <path class="arc ph sharp" d="M452.5 126.5A91.5 91.5 0 0 0 635.5 126.5" stroke="url(#p3dk-lg)"/>
+      <path class="arc ink dk" d="M452.5 126.5A91.5 91.5 0 0 0 635.5 126.5"/>
+    </g>
+    </g>
+  <g class="final" clip-path="url(#nogap-lg)">
+    <path class="fin lt" d="M452.5 126.5A91.5 91.5 0 0 1 635.5 126.5"/>
+    <path class="fin dk" d="M272 126.5A91.5 91.5 0 0 1 455 126.5"/>
+    <path class="fin lt" d="M91.5 126.5A91.5 91.5 0 0 1 274.5 126.5"/>
+    <path class="fin dk" d="M91.5 126.5A91.5 91.5 0 0 0 274.5 126.5"/>
+    <path class="fin lt" d="M272 126.5A91.5 91.5 0 0 0 455 126.5"/>
+    <path class="fin dk" d="M452.5 126.5A91.5 91.5 0 0 0 635.5 126.5"/>
+    </g>
+  <image class="word" href="img/logo-color.png" x="0" y="0" width="726" height="401" clip-path="url(#w-lg)"/>
+</svg>
+      <div class="hole h1"><b><span class="n" data-count="276">0</span><i>곳</i></b><span>국내 제휴 골프장</span><small>서울·경기·인천·강원·충청</small></div>
+      <div class="hole h2"><b><span class="n" data-count="1000" data-suffix="+">0</span></b><span>해외 제휴 코스</span><small>50여 개국 · 그린피 $60</small></div>
+      <div class="hole h3"><b><span class="n" data-count="2">0</span><i>년 연속</i></b><span>스타브랜드 대상</span><small>골프멤버십 부문</small></div>
+      <img class="lg-check" src="img/logo-color.png" alt="">
       </div>
+      <p class="lg-tag"><b>SINCE 2009</b>캐나다 창립 · 글로벌 골프 멤버십 · 수도권지사</p>
+      <ul class="lg-row" aria-hidden="true"><li><b>276<i>곳</i></b><span>국내 제휴 골프장</span></li><li><b>1,000+</b><span>해외 제휴 코스</span></li><li><b>2<i>년 연속</i></b><span>스타브랜드 대상</span></li></ul>
     </div>
   </section>
 
@@ -1303,15 +1391,20 @@ function setupVoice() {
 }
 
 function countUp() {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
-  const els = document.querySelectorAll('.stats .n[data-count]');
-  const io = new IntersectionObserver(entries => entries.forEach(en => {
-    if (!en.isIntersecting) return; io.unobserve(en.target);
-    const el = en.target, target = +el.dataset.count, t0 = performance.now(), dur = 1200;
-    const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(target * e).toLocaleString('ko-KR'); if (k < 1) requestAnimationFrame(step); };
+  const lg = document.getElementById('logoStats'); if (!lg) return;
+  if (location.search.includes('logocheck')) document.body.classList.add('logocheck');
+  const nums = () => lg.querySelectorAll('.n[data-count]').forEach(el => {
+    const to = +el.dataset.count, suf = el.dataset.suffix || '', t0 = performance.now(), dur = 900;
+    const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(to * e).toLocaleString('ko-KR') + suf; if (k < 1) requestAnimationFrame(step); };
     requestAnimationFrame(step);
-  }), { threshold: .4 });
-  els.forEach(el => io.observe(el));
+  });
+  const finish = () => lg.querySelectorAll('.n[data-count]').forEach(el => el.textContent = (+el.dataset.count).toLocaleString('ko-KR') + (el.dataset.suffix || ''));
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) { finish(); lg.classList.add('done'); return; }
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return; io.disconnect();
+    lg.classList.add('play'); setTimeout(nums, 2000); setTimeout(() => lg.classList.add('done'), 2700);
+  }), { threshold: .35 });
+  io.observe(lg);
 }
 
 function init() {

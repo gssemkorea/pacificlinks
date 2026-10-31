@@ -1,0 +1,60 @@
+<svg class="lg-svg" viewBox="0 0 726 401" aria-hidden="true">
+  <defs>
+    <clipPath id="nogap-lg"><rect x="0" y="0" width="726" height="121.5"/><rect x="0" y="131.5" width="726" height="270"/></clipPath>
+    <clipPath id="w-lg"><rect x="0" y="262" width="726" height="139"/></clipPath>
+    <pattern id="p1lt-lg" patternUnits="userSpaceOnUse" x="58" y="1.5" width="250" height="250"><image href="img/logo/p1-lt.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p1ltblur-lg" patternUnits="userSpaceOnUse" x="58" y="1.5" width="250" height="250"><image href="img/logo/p1-lt-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p1dk-lg" patternUnits="userSpaceOnUse" x="58" y="1.5" width="250" height="250"><image href="img/logo/p1-dk.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p1dkblur-lg" patternUnits="userSpaceOnUse" x="58" y="1.5" width="250" height="250"><image href="img/logo/p1-dk-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p2lt-lg" patternUnits="userSpaceOnUse" x="238.5" y="1.5" width="250" height="250"><image href="img/logo/p2-lt.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p2ltblur-lg" patternUnits="userSpaceOnUse" x="238.5" y="1.5" width="250" height="250"><image href="img/logo/p2-lt-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p2dk-lg" patternUnits="userSpaceOnUse" x="238.5" y="1.5" width="250" height="250"><image href="img/logo/p2-dk.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p2dkblur-lg" patternUnits="userSpaceOnUse" x="238.5" y="1.5" width="250" height="250"><image href="img/logo/p2-dk-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p3lt-lg" patternUnits="userSpaceOnUse" x="419" y="1.5" width="250" height="250"><image href="img/logo/p3-lt.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p3ltblur-lg" patternUnits="userSpaceOnUse" x="419" y="1.5" width="250" height="250"><image href="img/logo/p3-lt-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p3dk-lg" patternUnits="userSpaceOnUse" x="419" y="1.5" width="250" height="250"><image href="img/logo/p3-dk.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    <pattern id="p3dkblur-lg" patternUnits="userSpaceOnUse" x="419" y="1.5" width="250" height="250"><image href="img/logo/p3-dk-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
+    </defs>
+  <!-- 사슬 순서(아래→위): 3번 위, 2번 위, 1번 위, 1번 아래, 2번 아래, 3번 아래. 구간마다 흐린 사진·선명 사진·색 리본 세 겹을 같은 선으로 그림 -->
+  <g class="segs" clip-path="url(#nogap-lg)">
+    <g class="seg r3 lt s3">
+      <path class="arc ph blur" d="M452.5 126.5A91.5 91.5 0 0 1 635.5 126.5" stroke="url(#p3ltblur-lg)"/>
+      <path class="arc ph sharp" d="M452.5 126.5A91.5 91.5 0 0 1 635.5 126.5" stroke="url(#p3lt-lg)"/>
+      <path class="arc ink lt" d="M452.5 126.5A91.5 91.5 0 0 1 635.5 126.5"/>
+    </g>
+    <g class="seg r2 dk s2">
+      <path class="arc ph blur" d="M272 126.5A91.5 91.5 0 0 1 455 126.5" stroke="url(#p2dkblur-lg)"/>
+      <path class="arc ph sharp" d="M272 126.5A91.5 91.5 0 0 1 455 126.5" stroke="url(#p2dk-lg)"/>
+      <path class="arc ink dk" d="M272 126.5A91.5 91.5 0 0 1 455 126.5"/>
+    </g>
+    <g class="seg r1 lt s1">
+      <path class="arc ph blur" d="M91.5 126.5A91.5 91.5 0 0 1 274.5 126.5" stroke="url(#p1ltblur-lg)"/>
+      <path class="arc ph sharp" d="M91.5 126.5A91.5 91.5 0 0 1 274.5 126.5" stroke="url(#p1lt-lg)"/>
+      <path class="arc ink lt" d="M91.5 126.5A91.5 91.5 0 0 1 274.5 126.5"/>
+    </g>
+    <g class="seg r1 dk s1">
+      <path class="arc ph blur" d="M91.5 126.5A91.5 91.5 0 0 0 274.5 126.5" stroke="url(#p1dkblur-lg)"/>
+      <path class="arc ph sharp" d="M91.5 126.5A91.5 91.5 0 0 0 274.5 126.5" stroke="url(#p1dk-lg)"/>
+      <path class="arc ink dk" d="M91.5 126.5A91.5 91.5 0 0 0 274.5 126.5"/>
+    </g>
+    <g class="seg r2 lt s2">
+      <path class="arc ph blur" d="M272 126.5A91.5 91.5 0 0 0 455 126.5" stroke="url(#p2ltblur-lg)"/>
+      <path class="arc ph sharp" d="M272 126.5A91.5 91.5 0 0 0 455 126.5" stroke="url(#p2lt-lg)"/>
+      <path class="arc ink lt" d="M272 126.5A91.5 91.5 0 0 0 455 126.5"/>
+    </g>
+    <g class="seg r3 dk s3">
+      <path class="arc ph blur" d="M452.5 126.5A91.5 91.5 0 0 0 635.5 126.5" stroke="url(#p3dkblur-lg)"/>
+      <path class="arc ph sharp" d="M452.5 126.5A91.5 91.5 0 0 0 635.5 126.5" stroke="url(#p3dk-lg)"/>
+      <path class="arc ink dk" d="M452.5 126.5A91.5 91.5 0 0 0 635.5 126.5"/>
+    </g>
+    </g>
+  <g class="final" clip-path="url(#nogap-lg)">
+    <path class="fin lt" d="M452.5 126.5A91.5 91.5 0 0 1 635.5 126.5"/>
+    <path class="fin dk" d="M272 126.5A91.5 91.5 0 0 1 455 126.5"/>
+    <path class="fin lt" d="M91.5 126.5A91.5 91.5 0 0 1 274.5 126.5"/>
+    <path class="fin dk" d="M91.5 126.5A91.5 91.5 0 0 0 274.5 126.5"/>
+    <path class="fin lt" d="M272 126.5A91.5 91.5 0 0 0 455 126.5"/>
+    <path class="fin dk" d="M452.5 126.5A91.5 91.5 0 0 0 635.5 126.5"/>
+    </g>
+  <image class="word" href="img/logo-color.png" x="0" y="0" width="726" height="401" clip-path="url(#w-lg)"/>
+</svg>
