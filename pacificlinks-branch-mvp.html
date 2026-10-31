@@ -76,19 +76,21 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 /* hero */
 .hero{position:relative;color:var(--on-dark);background:var(--navy);overflow:hidden}
 .hero-media{position:absolute;inset:0;overflow:hidden}
-.hero-media video,.hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%}
+.hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%}
 .hero-media video{opacity:0;transition:opacity .6s}
 .hero-media video.playing{opacity:1}
 /* YouTube 배경: 16:9를 화면에 꽉 채우도록 중앙 확대 */
 .hero-media .yt{position:absolute;top:50%;left:50%;width:max(100%,177.78vh);height:max(100%,56.25vw);transform:translate(-50%,-50%);border:0;pointer-events:none;opacity:0;transition:opacity .8s}
 .hero-media .yt.playing{opacity:1}
-.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,14,24,.3) 0%,rgba(6,14,24,.6) 55%,rgba(6,14,24,.9) 100%)}
-.hero .wrap{position:relative;padding-block:clamp(80px,12vw,150px) clamp(110px,14vw,160px);display:grid;grid-template-columns:1fr;gap:24px;align-items:center}
+.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,14,24,.45) 0%,rgba(6,14,24,.62) 55%,rgba(6,14,24,.92) 100%)}
+.hero .wrap{position:relative;padding-block:clamp(80px,12vw,150px) clamp(110px,14vw,160px);display:grid;grid-template-columns:1fr;gap:24px;align-items:center;justify-items:center;text-align:center}
 @media (max-width:860px){.hero .wrap{grid-template-columns:1fr}}
-.hero-text{display:grid;gap:18px}
-.hero h1{font-size:clamp(34px,5.2vw,58px);max-width:16ch}
+.hero-text{display:grid;gap:18px;justify-items:center;max-width:940px}
+.hero h1{font-size:clamp(30px,4.3vw,54px);max-width:none;line-height:1.18;white-space:nowrap}
+@media (max-width:640px){.hero h1{white-space:normal}}
+@media (max-width:640px){.hero h1 br{display:none}}
 .hero .sub{font-size:clamp(16px,1.6vw,19px);color:var(--on-dark-muted);max-width:30em}
-.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;justify-content:center}
 .hero .owner{font-size:14px;color:var(--on-dark-muted)}
 .hero .video-link{font-size:14px;color:var(--on-dark-muted);text-decoration:underline;text-underline-offset:3px}
 .hero-person{justify-self:end;align-self:end;width:min(440px,100%);max-height:620px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 24px 36px rgba(0,0,0,.5));margin-bottom:calc(-1 * clamp(48px,7vw,88px))}
@@ -102,6 +104,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .lg .ink.lt,.lg .fin.lt{stroke:#68ABE4}.lg .ink.dk,.lg .fin.dk{stroke:#16599E}
 .lg .fin{fill:none;stroke-width:68}
 .lg .final{display:none}
+.lg .lg-shadow{opacity:0;transition:opacity .9s ease}
+.lg.done .lg-shadow{opacity:1}
 .lg .word{opacity:0;transform:translateY(12px)}
 .lg.play .word{animation:lgRise .6s ease-out 2.3s forwards}
 .lg.done .word{opacity:1;transform:none;clip-path:none;animation:none}
@@ -618,18 +622,13 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
 <main id="top">
   <section class="hero" aria-label="소개">
     <div class="hero-media" aria-hidden="true" id="heroMedia">
-      <!-- 1) 포스터: 데스크톱은 가로 1920, 모바일은 세로 1080 고해상도 -->
-      <img id="heroPoster" src="img/hero-cf.jpg" srcset="img/ad-lbh.jpg 1080w, img/hero-cf.jpg 1600w" sizes="(max-width: 860px) 100vw, 1600px" alt="">
-      <!-- 2) 자체 호스팅 루프: 이병헌 CF 컷 + 필드 3컷 (media/hero.mp4, 무음) -->
-      <video autoplay muted loop playsinline preload="auto" id="heroVideo">
-        <source src="media/hero.mp4" type="video/mp4">
-      </video>
-      <!-- 3) 자체 영상이 없고 유튜브 임베드가 허용된 호스트면 이병헌 CF(5j4Z3RH6RPM)를 무음 배경으로 삽입 (스크립트) -->
+      <!-- 정지 이미지 한 장(Unsplash, 1920 가로 / 1080 세로). 영상·유튜브 배경은 v38에서 제거 -->
+      <img id="heroPoster" src="img/hero-hd.jpg" srcset="img/hero-mobile-hd.jpg 1080w, img/hero-hd.jpg 1920w" sizes="(max-width: 860px) 100vw, 1920px" alt="">
     </div>
     <div class="wrap">
       <div class="hero-text">
         <div class="eyebrow">Pacific Links Korea · 수도권지사</div>
-        <h1>주말 라운드, 수도권 276곳에서 그린피 절반으로</h1>
+        <h1>주말 라운드, 수도권 276곳에서 <br>그린피 절반으로</h1>
         <p class="sub">멤버십 한 장으로 국내 276곳, 전 세계 1,000여 코스. 개인·법인 멤버십을 담당 지사장이 직접 안내합니다.</p>
         <div class="cta">
           <a class="btn btn-primary" href="#products" data-track="hero_cta_click">내게 맞는 상품 확인</a>
@@ -662,6 +661,7 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
     <pattern id="p3dkblur-lg" patternUnits="userSpaceOnUse" x="419" y="1.5" width="250" height="250"><image href="img/logo/p3-dk-blur.jpg" width="250" height="250" preserveAspectRatio="xMidYMid slice"/></pattern>
     </defs>
   <!-- 사슬 순서(아래→위): 3번 위, 2번 위, 1번 위, 1번 아래, 2번 아래, 3번 아래. 구간마다 흐린 사진·선명 사진·색 리본 세 겹을 같은 선으로 그림 -->
+  <image class="lg-shadow" href="img/logo-shadow.png" x="-60" y="-60" width="846" height="521"/>
   <g class="segs" clip-path="url(#nogap-lg)">
     <g class="seg r3 lt s3">
       <path class="arc ph blur" d="M452.5 126.5A91.5 91.5 0 0 1 635.5 126.5" stroke="url(#p3ltblur-lg)"/>
@@ -1222,27 +1222,6 @@ let EMBED_BLOCKED = /claude\.ai$|claudeusercontent\.com$|claude\.site$/.test(loc
 document.addEventListener('securitypolicyviolation', e => { if (/youtube/.test(e.blockedURI || '')) { EMBED_BLOCKED = true; document.body.classList.add('embed-blocked'); document.querySelectorAll('.hero-media .yt').forEach(f => f.remove()); } });
 if (EMBED_BLOCKED) document.documentElement.classList.add('embed-blocked');
 function setupVideo() {
-  const v = document.getElementById('heroVideo');
-  let selfHosted = false;
-  v.addEventListener('playing', () => { v.classList.add('playing'); selfHosted = true; });
-  v.muted = true; v.defaultMuted = true; v.setAttribute('muted', '');
-  v.addEventListener('error', () => {}, true);
-  const tryPlay = () => v.play().catch(() => {});
-  tryPlay();
-  v.addEventListener('canplay', tryPlay, { once: true });
-  ['touchstart', 'scroll', 'click', 'keydown'].forEach(ev => window.addEventListener(ev, tryPlay, { once: true, passive: true }));
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
-  // 유튜브 배경 (자체 영상이 1.5초 안에 재생되지 않을 때만)
-  setTimeout(() => {
-    if (selfHosted || EMBED_BLOCKED || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const f = document.createElement('iframe');
-    f.className = 'yt';
-    f.src = `https://www.youtube.com/embed/${CF_YOUTUBE_ID}?autoplay=1&mute=1&loop=1&playlist=${CF_YOUTUBE_ID}&controls=0&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3`;
-    f.allow = 'autoplay; encrypted-media';
-    f.title = '';
-    f.addEventListener('load', () => setTimeout(() => f.classList.add('playing'), 1200));
-    document.getElementById('heroMedia').insertBefore(f, document.getElementById('heroMedia').firstChild.nextSibling);
-  }, 1500);
   // CF 섹션: 자체 호스팅 CF 재생
   const cv = document.getElementById('cfVideo'), cb = document.getElementById('cfBox');
   document.getElementById('cfPlay').addEventListener('click', () => { cb.classList.add('playing'); cv.play().catch(() => {}); track('cf_play_click'); });
