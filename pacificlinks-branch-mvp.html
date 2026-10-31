@@ -1256,7 +1256,8 @@ function setupHeroSlides() {
   const url = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&q=80&` + (mobile ? 'w=1080&h=1728' : 'w=1920&h=1100');
   const ready = []; let i = -1, timer = null;
   const show = () => { if (!ready.length) return; const prev = ready[i]; i = (i + 1) % ready.length; const cur = ready[i]; if (prev && prev !== cur) prev.classList.remove('on'); cur.classList.add('on'); };
-  const start = () => { if (timer) return; show(); timer = setInterval(show, +box.dataset.interval || 6500); };
+  const heroEl = document.getElementById('hero');
+  const start = () => { if (timer || !ready.length) return; if (heroEl && !heroEl.classList.contains('open')) { heroEl.addEventListener('hero:open', start, { once: true }); return; } show(); timer = setInterval(show, +box.dataset.interval || 6500); };
   HERO_SLIDES.forEach(s => {
     const im = new Image(); im.alt = ''; im.decoding = 'async'; im.style.objectPosition = s.pos; im.title = 'Photo: ' + s.by + ' / Unsplash';
     im.addEventListener('load', () => { box.appendChild(im); ready.push(im); if (ready.length === 1) start(); });
@@ -1428,12 +1429,12 @@ function countUp() {
   // 히어로 높이 = 가용 높이 − 헤더 − 로고 밴드
   const size = () => { const r = document.documentElement.style; r.setProperty('--lgH', band.offsetHeight + 'px'); r.setProperty('--hdrH', (hdr ? hdr.offsetHeight : 76) + 'px'); const w = hero.querySelector('.wrap'); if (w) r.setProperty('--heroH', w.offsetHeight + 'px'); };
   size(); addEventListener('resize', size);
-  const open = () => { size(); hero.classList.add('open'); };
+  const open = () => { size(); if (hero.classList.contains('open')) return; hero.classList.add('open'); setTimeout(() => hero.dispatchEvent(new Event('hero:open')), 300); };
   // 헤더 로고: 로고 밴드가 반 이상 보이면 숨김
   if ('IntersectionObserver' in window && hdr) new IntersectionObserver(es => es.forEach(en => hdr.classList.toggle('band-visible', en.intersectionRatio >= .5)), { threshold: [0, .5, 1] }).observe(band);
   // 재생 규칙: 페이지를 열 때마다 로고 애니메이션 → 히어로 펼침. 해시 진입(#faq 등)·동작 축소·?nointro·data-intro="off"만 즉시 펼친 상태
   const skip = document.body.dataset.intro === 'off' || reduce || location.hash.length > 1 || location.search.includes('nointro');
-  if (skip) { finish(lg); lg.classList.add('done'); hero.classList.add('open'); return; }
+  if (skip) { finish(lg); lg.classList.add('done'); open(); return; }
   requestAnimationFrame(() => {
     lg.classList.add('play'); setTimeout(() => nums(lg), 2000); setTimeout(() => lg.classList.add('done'), 2700);
     setTimeout(open, 2900); track('intro_done');
