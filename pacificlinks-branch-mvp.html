@@ -78,20 +78,19 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .hero-media{position:absolute;inset:0;overflow:hidden}
 .hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%}
 .hero-slides{position:absolute;inset:0}
-/* 인트로 커튼 */
-.intro{position:fixed;inset:0;z-index:1000;color:#fff;background:radial-gradient(1100px 620px at 50% 30%,#17406E,#0B1C33 72%);display:grid;place-items:center;padding:24px;transform:translateY(0);transition:transform .85s cubic-bezier(.7,0,.3,1)}
-.intro.leave{transform:translateY(-102%)}
-.intro-box{display:grid;justify-items:center;gap:6px;width:100%}
-.intro .lg{width:min(100%,780px)}
-.intro .lg-tag{color:#B5C4D6}
-.intro .skip{position:absolute;right:22px;bottom:22px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;opacity:0;transition:opacity .4s}
-.intro.ready .skip{opacity:1}
-body.intro-on{overflow:hidden}
-/* 히어로 높이: 첫 화면에 다음 밴드(로고 윗부분)가 살짝 보이도록 */
-.hero .wrap{min-height:clamp(520px,calc(100svh - 76px - 150px),780px);box-sizing:border-box;padding-block:clamp(48px,7vw,96px)}
-.hero-cue{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);color:rgba(255,255,255,.75);font-size:12px;letter-spacing:.14em;display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none}
-.hero-cue i{width:18px;height:18px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);animation:cue 1.6s ease-in-out infinite}
-@keyframes cue{0%,100%{transform:translateY(0) rotate(45deg);opacity:.5}50%{transform:translateY(6px) rotate(45deg);opacity:1}}
+/* 히어로 펼침: 로고 애니메이션이 끝나면 0 → 화면 하단까지 (가용 높이 − 헤더 − 로고 밴드, 최소 460px·최대 860px) */
+.hero{display:grid;grid-template-rows:0fr;transition:grid-template-rows .9s cubic-bezier(.7,0,.3,1)}
+.hero.open{grid-template-rows:1fr}
+.hero-in{min-height:0;overflow:hidden;position:relative}
+.hero .wrap{min-height:clamp(420px,calc(100svh - var(--hdrH,76px) - var(--lgH,380px)),860px);box-sizing:border-box;padding-block:clamp(20px,2.2vw,40px)}
+.hero-text{opacity:0;transform:translateY(16px);transition:opacity .6s ease .45s,transform .6s ease .45s}
+.hero.open .hero-text{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.hero{transition:none}.hero-text{transition:none}}
+/* 짧은 화면(노트북 1366×768 등): 로고 밴드 압축 */
+@media (min-width:861px) and (max-height:820px){.logo-band{padding:14px 0 10px}.logo-band .lg{width:min(100%,560px)}.hero .video-link{display:none}.hero .wrap{padding-block:22px}}
+/* 로고 밴드가 보이는 동안 헤더 로고 숨김 (중복 방지) */
+.brand{transition:opacity .35s}
+header.band-visible .brand{opacity:0;pointer-events:none}
 .hero-slides img{opacity:0;transition:opacity 1.6s ease;will-change:opacity,transform}
 .hero-slides img.on{opacity:1;animation:heroKb 8s linear forwards}
 @keyframes heroKb{from{transform:scale(1)}to{transform:scale(1.07)}}
@@ -102,10 +101,10 @@ body.intro-on{overflow:hidden}
 .hero-media .yt{position:absolute;top:50%;left:50%;width:max(100%,177.78vh);height:max(100%,56.25vw);transform:translate(-50%,-50%);border:0;pointer-events:none;opacity:0;transition:opacity .8s}
 .hero-media .yt.playing{opacity:1}
 .hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,14,24,.45) 0%,rgba(6,14,24,.62) 55%,rgba(6,14,24,.92) 100%)}
-.hero .wrap{position:relative;padding-block:clamp(80px,12vw,150px) clamp(110px,14vw,160px);display:grid;grid-template-columns:1fr;gap:24px;align-items:center;justify-items:center;text-align:center}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1fr;gap:24px;align-items:center;justify-items:center;text-align:center}
 @media (max-width:860px){.hero .wrap{grid-template-columns:1fr}}
-.hero-text{display:grid;gap:18px;justify-items:center;max-width:940px}
-.hero h1{font-size:clamp(30px,4.3vw,54px);max-width:none;line-height:1.18;white-space:nowrap}
+.hero-text{display:grid;gap:14px;justify-items:center;max-width:940px}
+.hero h1{font-size:clamp(28px,3.6vw,48px);max-width:none;line-height:1.18;white-space:nowrap}
 @media (max-width:640px){.hero h1{white-space:normal}}
 @media (max-width:640px){.hero h1 br{display:none}}
 .hero .sub{font-size:clamp(16px,1.6vw,19px);color:var(--on-dark-muted);max-width:30em}
@@ -116,8 +115,9 @@ body.intro-on{overflow:hidden}
 @media (max-width:860px){.hero-person{justify-self:center;width:min(300px,78%);margin-bottom:calc(-1 * clamp(48px,7vw,88px))}}
 
 /* ===== 로고 지표 밴드: 고리는 벡터(원본 측정값), 리본은 사진 패턴 스트로크, 완성 시 원본 PNG로 교체 ===== */
-.logo-band{background:radial-gradient(1100px 520px at 50% 0,#17406E,#0B1C33 72%);color:#fff;padding:34px 0 30px;position:relative;z-index:2}
-.lg{position:relative;width:min(100%,860px);margin:0 auto;container-type:inline-size}
+.logo-band{background:radial-gradient(1100px 520px at 50% 0,#17406E,#0B1C33 72%);color:#fff;padding:18px 0 14px;position:relative;z-index:2}
+.lg{position:relative;width:min(100%,720px);margin:0 auto;container-type:inline-size}
+@container (max-width:800px){.lg .hole small{display:none}.lg .hole>span{font-size:1.75cqw;margin-top:.5cqw}.lg .hole b{font-size:4.4cqw}.lg .hole b i{font-size:1.5cqw}}
 .lg-svg{display:block;width:100%;height:auto;overflow:visible}
 .lg .arc{fill:none;stroke-width:68;stroke-linecap:butt;stroke-dasharray:288;stroke-dashoffset:288}
 .lg .ink.lt,.lg .fin.lt{stroke:#68ABE4}.lg .ink.dk,.lg .fin.dk{stroke:#16599E}
@@ -148,7 +148,7 @@ body.intro-on{overflow:hidden}
 .lg.play .hole{animation:lgFade .5s ease-out forwards}
 .lg.play .h1{animation-delay:2s}.lg.play .h2{animation-delay:2.15s}.lg.play .h3{animation-delay:2.3s}
 .lg.done .hole{opacity:1;animation:none}
-.lg-tag{text-align:center;margin:14px 0 0;font-size:14px;color:#B5C4D6}
+.lg-tag{text-align:center;margin:8px 0 0;font-size:13px;color:#B5C4D6}
 .lg-tag b{font-family:var(--latin);letter-spacing:.3em;font-size:12px;color:#9CC7EE;margin-right:10px}
 .lg-row{display:none;justify-content:center;gap:22px;margin:14px 0 0;padding:0;list-style:none;text-align:center}
 .lg-row li b{display:block;font-family:var(--latin);font-size:22px;font-weight:800}
@@ -639,28 +639,6 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
 </header>
 
 <main id="top">
-  <section class="hero" aria-label="소개">
-    <div class="hero-media" aria-hidden="true" id="heroMedia">
-      <!-- 정지 이미지 한 장(Unsplash, 1920 가로 / 1080 세로). 영상·유튜브 배경은 v38에서 제거 -->
-      <img id="heroPoster" src="img/hero-hd.jpg" srcset="img/hero-mobile-hd.jpg 1080w, img/hero-hd.jpg 1920w" sizes="(max-width: 860px) 100vw, 1920px" alt="">
-      <div class="hero-slides" id="heroSlides" data-interval="6500"></div>
-    </div>
-    <div class="wrap">
-      <div class="hero-cue" aria-hidden="true">SCROLL<i></i></div>
-      <div class="hero-text">
-        <div class="eyebrow">Pacific Links Korea · 수도권지사</div>
-        <h1>주말 라운드, 수도권 276곳에서 <br>그린피 절반으로</h1>
-        <p class="sub">멤버십 한 장으로 국내 276곳, 전 세계 1,000여 코스. 개인·법인 멤버십을 담당 지사장이 직접 안내합니다.</p>
-        <div class="cta">
-          <a class="btn btn-primary" href="#products" data-track="hero_cta_click">내게 맞는 상품 확인</a>
-          <a class="btn btn-ghost" href="#contact" data-track="hero_form_click">자료 받기</a>
-        </div>
-        <a class="video-link" href="#cf" data-track="hero_video_click">이병헌 CF 전체 영상 보기 ↓</a>
-        <p class="owner">담당: 강현식 지사장 · 접수 후 24시간 내 회신</p>
-      </div>
-    </div>
-  </section>
-
   <section class="band logo-band" id="brand" aria-label="신뢰">
     <div class="wrap">
       <div class="lg" id="logoStats">
@@ -732,6 +710,29 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
       </div>
       <p class="lg-tag"><b>SINCE 2009</b>캐나다 창립 · 글로벌 골프 멤버십 · 수도권지사</p>
       <ul class="lg-row" aria-hidden="true"><li><b>276<i>곳</i></b><span>국내 제휴 골프장</span></li><li><b>1,000+</b><span>해외 제휴 코스</span></li><li><b>2<i>년 연속</i></b><span>스타브랜드 대상</span></li></ul>
+    </div>
+  </section>
+
+  <noscript><style>.hero{grid-template-rows:1fr!important}.hero-text{opacity:1!important;transform:none!important}</style></noscript>
+  <section class="hero" id="hero" aria-label="소개">
+    <div class="hero-in">
+    <div class="hero-media" aria-hidden="true" id="heroMedia">
+      <!-- 정지 이미지 한 장(Unsplash, 1920 가로 / 1080 세로). 영상·유튜브 배경은 v38에서 제거 -->
+      <img id="heroPoster" src="img/hero-hd.jpg" srcset="img/hero-mobile-hd.jpg 1080w, img/hero-hd.jpg 1920w" sizes="(max-width: 860px) 100vw, 1920px" alt="">
+      <div class="hero-slides" id="heroSlides" data-interval="6500"></div>
+    </div>
+    <div class="wrap">
+      <div class="hero-text">
+        <div class="eyebrow">Pacific Links Korea · 수도권지사</div>
+        <h1>주말 라운드, 수도권 276곳에서 <br>그린피 절반으로</h1>
+        <p class="sub">멤버십 한 장으로 국내 276곳, 전 세계 1,000여 코스. 개인·법인 멤버십을 담당 지사장이 직접 안내합니다.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#products" data-track="hero_cta_click">내게 맞는 상품 확인</a>
+          <a class="btn btn-ghost" href="#contact" data-track="hero_form_click">자료 받기</a>
+        </div>
+        <p class="owner">담당: 강현식 지사장 · 접수 후 24시간 내 회신 · <a class="video-link" href="#cf" data-track="hero_video_click">이병헌 CF 보기 ↓</a></p>
+      </div>
+    </div>
     </div>
   </section>
 
@@ -1413,7 +1414,8 @@ function setupVoice() {
 }
 
 function countUp() {
-  const lg = document.getElementById('logoStats'); if (!lg) return;
+  const lg = document.getElementById('logoStats'), hero = document.getElementById('hero'), band = document.getElementById('brand'), hdr = document.querySelector('header');
+  if (!lg || !hero) return;
   if (location.search.includes('logocheck')) document.body.classList.add('logocheck');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const numsOf = el => el.querySelectorAll('.n[data-count]');
@@ -1423,32 +1425,23 @@ function countUp() {
     requestAnimationFrame(step);
   });
   const finish = el => numsOf(el).forEach(n => n.textContent = (+n.dataset.count).toLocaleString('ko-KR') + (n.dataset.suffix || ''));
-  const play = el => { el.classList.add('play'); setTimeout(() => nums(el), 2000); setTimeout(() => el.classList.add('done'), 2700); };
-  const playOnScroll = () => {
-    if (reduce || !('IntersectionObserver' in window)) { finish(lg); lg.classList.add('done'); return; }
-    const io = new IntersectionObserver(es => es.forEach(en => { if (!en.isIntersecting) return; io.disconnect(); play(lg); }), { threshold: .5 });
-    io.observe(lg);
-  };
-  // 인트로: 세션당 1회, 동작 축소·해시 진입·data-intro="off"면 생략
+  // 히어로 높이 = 가용 높이 − 헤더 − 로고 밴드
+  const size = () => { document.documentElement.style.setProperty('--lgH', band.offsetHeight + 'px'); document.documentElement.style.setProperty('--hdrH', (hdr ? hdr.offsetHeight : 76) + 'px'); };
+  size(); addEventListener('resize', size);
+  const open = () => { size(); hero.classList.add('open'); };
+  // 헤더 로고: 로고 밴드가 반 이상 보이면 숨김
+  if ('IntersectionObserver' in window && hdr) new IntersectionObserver(es => es.forEach(en => hdr.classList.toggle('band-visible', en.intersectionRatio >= .5)), { threshold: [0, .5, 1] }).observe(band);
+  // 재생 규칙: 첫 진입만 애니메이션 → 펼침. 세션 재방문·해시 진입·동작 축소·?nointro 는 즉시 펼친 상태
   let seen = false; try { seen = sessionStorage.getItem('plk-intro') === '1'; } catch (e) {}
-  const introOff = document.body.dataset.intro === 'off' || reduce || seen || location.hash.length > 1 || location.search.includes('nointro');
-  if (introOff) { playOnScroll(); return; }
-  const intro = document.createElement('div'); intro.className = 'intro'; intro.setAttribute('aria-label', '퍼시픽링스코리아 수도권지사');
-  const clone = lg.cloneNode(true); clone.id = 'logoIntro';
-  clone.innerHTML = clone.innerHTML.replace(/-lg\b/g, '-in'); // SVG id 충돌 방지
-  const box = document.createElement('div'); box.className = 'intro-box'; box.appendChild(clone); intro.appendChild(box);
-  const tag = document.querySelector('.lg-tag'); if (tag) box.appendChild(tag.cloneNode(true));
-  const row = document.querySelector('.lg-row'); if (row) box.appendChild(row.cloneNode(true));
-  const skip = document.createElement('button'); skip.type = 'button'; skip.className = 'skip'; skip.textContent = '건너뛰기'; intro.appendChild(skip);
-  document.body.appendChild(intro); document.body.classList.add('intro-on');
-  let left = false;
-  const leave = () => { if (left) return; left = true; try { sessionStorage.setItem('plk-intro', '1'); } catch (e) {}
-    intro.classList.add('leave'); document.body.classList.remove('intro-on');
-    finish(lg); lg.classList.add('done'); // 아래 밴드는 완성 상태로 대기
-    setTimeout(() => intro.remove(), 900); track('intro_done'); };
-  requestAnimationFrame(() => { play(clone); setTimeout(() => intro.classList.add('ready'), 1200); setTimeout(leave, 3600); });
-  skip.addEventListener('click', leave);
-  ['wheel', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, leave, { once: true, passive: true }));
+  const skip = document.body.dataset.intro === 'off' || reduce || seen || location.hash.length > 1 || location.search.includes('nointro');
+  if (skip) { finish(lg); lg.classList.add('done'); hero.classList.add('open'); return; }
+  try { sessionStorage.setItem('plk-intro', '1'); } catch (e) {}
+  requestAnimationFrame(() => {
+    lg.classList.add('play'); setTimeout(() => nums(lg), 2000); setTimeout(() => lg.classList.add('done'), 2700);
+    setTimeout(open, 2900); track('intro_done');
+  });
+  // 사용자가 먼저 스크롤/클릭하면 기다리지 않고 바로 펼침
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => window.addEventListener(ev, () => { finish(lg); lg.classList.add('done'); open(); }, { once: true, passive: true }));
 }
 
 function init() {
