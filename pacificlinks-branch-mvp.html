@@ -1431,17 +1431,15 @@ function countUp() {
   const open = () => { size(); hero.classList.add('open'); };
   // 헤더 로고: 로고 밴드가 반 이상 보이면 숨김
   if ('IntersectionObserver' in window && hdr) new IntersectionObserver(es => es.forEach(en => hdr.classList.toggle('band-visible', en.intersectionRatio >= .5)), { threshold: [0, .5, 1] }).observe(band);
-  // 재생 규칙: 첫 진입만 애니메이션 → 펼침. 세션 재방문·해시 진입·동작 축소·?nointro 는 즉시 펼친 상태
-  let seen = false; try { seen = sessionStorage.getItem('plk-intro') === '1'; } catch (e) {}
-  const skip = document.body.dataset.intro === 'off' || reduce || seen || location.hash.length > 1 || location.search.includes('nointro');
+  // 재생 규칙: 페이지를 열 때마다 로고 애니메이션 → 히어로 펼침. 해시 진입(#faq 등)·동작 축소·?nointro·data-intro="off"만 즉시 펼친 상태
+  const skip = document.body.dataset.intro === 'off' || reduce || location.hash.length > 1 || location.search.includes('nointro');
   if (skip) { finish(lg); lg.classList.add('done'); hero.classList.add('open'); return; }
-  try { sessionStorage.setItem('plk-intro', '1'); } catch (e) {}
   requestAnimationFrame(() => {
     lg.classList.add('play'); setTimeout(() => nums(lg), 2000); setTimeout(() => lg.classList.add('done'), 2700);
     setTimeout(open, 2900); track('intro_done');
   });
-  // 사용자가 먼저 스크롤/클릭하면 기다리지 않고 바로 펼침
-  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(ev => window.addEventListener(ev, () => { finish(lg); lg.classList.add('done'); open(); }, { once: true, passive: true }));
+  // 사용자가 먼저 스크롤하면 기다리지 않고 바로 펼침 (클릭은 애니메이션을 끊지 않음)
+  ['wheel', 'touchstart'].forEach(ev => window.addEventListener(ev, () => { finish(lg); lg.classList.add('done'); open(); }, { once: true, passive: true }));
 }
 
 function init() {
