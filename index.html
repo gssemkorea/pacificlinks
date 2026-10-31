@@ -546,8 +546,11 @@ body.full .card-visual figcaption b{color:var(--on-dark)}
 footer{padding-block:36px;font-size:13px;color:var(--muted);border-top:1px solid var(--line)}
 footer .links{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px}
 footer a{text-decoration:none}
-footer>.wrap>img{height:52px;width:auto;margin-bottom:18px;opacity:.95}
-@media (max-width:640px){footer>.wrap>img{height:36px}}
+footer .f-logo{display:block;height:34px;width:auto;margin-bottom:18px}
+footer .f-logo-white{display:none}
+body.full footer .f-logo-gray{display:none}
+body.full footer .f-logo-white{display:block}
+@media (max-width:640px){footer .f-logo{height:28px}}
 footer .awards{display:flex;gap:28px;flex-wrap:wrap;margin:6px 0 18px}
 footer .awards figure{display:flex;align-items:center;gap:12px;margin:0}
 footer .awards img{height:56px;width:auto;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
@@ -979,7 +982,7 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
 
   <footer id="terms">
     <div class="wrap">
-      <img src="img/logo-h.png" alt="Pacific Links Korea">
+      <img class="f-logo f-logo-gray" src="img/logo-h-gray.png" alt="Pacific Links Korea"><img class="f-logo f-logo-white" src="img/logo-h-white.png" alt="" aria-hidden="true">
       <div class="links">
         <a href="https://www.pacificlinks.co.kr/" target="_blank" rel="noopener">본사 홈페이지</a>
         <a href="https://blog.naver.com/gssemgroup" target="_blank" rel="noopener">네이버 블로그</a>
