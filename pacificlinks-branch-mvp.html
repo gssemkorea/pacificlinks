@@ -90,7 +90,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 @media (min-width:861px) and (max-height:820px){.logo-band{padding:14px 0 10px}.logo-band .lg{width:min(100%,560px)}.hero .video-link{display:none}.hero .wrap{padding-block:22px}}
 /* 로고 밴드가 보이는 동안 헤더 로고 숨김 (중복 방지) */
 .brand{transition:opacity .35s}
-header.band-visible .brand{opacity:0;pointer-events:none}
+header.no-brand .brand{opacity:0;pointer-events:none}
 .hero-slides img{opacity:0;transition:opacity 1.6s ease;will-change:opacity,transform}
 .hero-slides img.on{opacity:1;animation:heroKb 8s linear forwards}
 @keyframes heroKb{from{transform:scale(1)}to{transform:scale(1.07)}}
@@ -343,7 +343,7 @@ body.full .fpop-head .lb-close{background:rgba(255,255,255,.1);color:#fff}
 .vbtn .ring .fg{stroke:var(--c-acc);stroke-linecap:round;stroke-dasharray:164;stroke-dashoffset:164;transition:stroke-dashoffset .25s linear}
 .vbtn[data-state="playing"] .ring,.vbtn[data-state="paused"] .ring,.vbtn[data-state="done"] .ring{opacity:1}
 .vbtn[data-state="playing"]{animation:vpulse 1.6s ease-out infinite}
-.vbtn[data-state="paused"]{background:var(--c-fg);color:var(--c-bg,#fff)}
+.vbtn[data-state="paused"]{background:#fff;color:var(--c-acc,#16599E);box-shadow:0 8px 18px rgba(0,0,0,.18),inset 0 0 0 2px var(--c-acc,#16599E)}
 .card[data-tier="corp"] .vbtn[data-state="paused"],.card[data-tier="premium"] .vbtn[data-state="paused"]{background:#fff;color:#0E1C2E}
 @keyframes vpulse{0%{box-shadow:0 8px 18px rgba(0,0,0,.18),0 0 0 0 color-mix(in srgb,var(--c-acc) 50%,transparent)}100%{box-shadow:0 8px 18px rgba(0,0,0,.18),0 0 0 14px transparent}}
 .vbtn::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 12px);right:0;background:#0E1C2E;color:#fff;font-size:12.5px;font-weight:700;line-height:1;padding:8px 11px;border-radius:7px;white-space:nowrap;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;pointer-events:none;z-index:2}
@@ -1429,12 +1429,12 @@ function countUp() {
   // 히어로 높이 = 가용 높이 − 헤더 − 로고 밴드
   const size = () => { const r = document.documentElement.style; r.setProperty('--lgH', band.offsetHeight + 'px'); r.setProperty('--hdrH', (hdr ? hdr.offsetHeight : 76) + 'px'); const w = hero.querySelector('.wrap'); if (w) r.setProperty('--heroH', w.offsetHeight + 'px'); };
   size(); addEventListener('resize', size);
-  const open = () => { size(); if (hero.classList.contains('open')) return; hero.classList.add('open'); setTimeout(() => hero.dispatchEvent(new Event('hero:open')), 300); };
+  const open = () => { size(); if (hero.classList.contains('open')) return; hero.classList.add('open'); if (hdr) hdr.classList.remove('no-brand'); setTimeout(() => hero.dispatchEvent(new Event('hero:open')), 300); };
   // 헤더 로고: 로고 밴드가 반 이상 보이면 숨김
-  if ('IntersectionObserver' in window && hdr) new IntersectionObserver(es => es.forEach(en => hdr.classList.toggle('band-visible', en.intersectionRatio >= .5)), { threshold: [0, .5, 1] }).observe(band);
   // 재생 규칙: 페이지를 열 때마다 로고 애니메이션 → 히어로 펼침. 해시 진입(#faq 등)·동작 축소·?nointro·data-intro="off"만 즉시 펼친 상태
   const skip = document.body.dataset.intro === 'off' || reduce || location.hash.length > 1 || location.search.includes('nointro');
   if (skip) { finish(lg); lg.classList.add('done'); open(); return; }
+  if (hdr) hdr.classList.add('no-brand'); // 로고 애니메이션 동안 헤더 로고 숨김 → 히어로와 함께 등장
   requestAnimationFrame(() => {
     lg.classList.add('play'); setTimeout(() => nums(lg), 2000); setTimeout(() => lg.classList.add('done'), 2700);
     setTimeout(open, 2900); track('intro_done');
