@@ -75,15 +75,15 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 
 /* hero */
 .hero{position:relative;color:var(--on-dark);background:var(--navy);overflow:hidden}
-.hero-media{position:absolute;inset:0;overflow:hidden}
+.hero-media{position:absolute;left:0;right:0;bottom:0;height:var(--heroH,100%);overflow:hidden}
 .hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%}
 .hero-slides{position:absolute;inset:0}
-/* 히어로 펼침: 로고 애니메이션이 끝나면 0 → 화면 하단까지 (가용 높이 − 헤더 − 로고 밴드, 최소 460px·최대 860px) */
+/* 히어로 펼침: 처음엔 높이 0(로고 밴드가 첫 화면). 로고 애니메이션이 끝나면 히어로가 위에서 펼쳐지며 로고 밴드를 아래로 밀어냄. 높이 = 가용 − 헤더 − 밴드(최소 420) → 펼친 뒤 밴드 하단이 화면 하단 */
 .hero{display:grid;grid-template-rows:0fr;transition:grid-template-rows .9s cubic-bezier(.7,0,.3,1)}
 .hero.open{grid-template-rows:1fr}
-.hero-in{min-height:0;overflow:hidden;position:relative}
+.hero-in{min-height:0;overflow:hidden;position:relative;display:grid;align-content:end}
 .hero .wrap{min-height:clamp(420px,calc(100svh - var(--hdrH,76px) - var(--lgH,380px)),860px);box-sizing:border-box;padding-block:clamp(20px,2.2vw,40px)}
-.hero-text{opacity:0;transform:translateY(16px);transition:opacity .6s ease .45s,transform .6s ease .45s}
+.hero-text{opacity:0;transform:translateY(-14px);transition:opacity .6s ease .5s,transform .6s ease .5s}
 .hero.open .hero-text{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.hero{transition:none}.hero-text{transition:none}}
 /* 짧은 화면(노트북 1366×768 등): 로고 밴드 압축 */
@@ -639,6 +639,29 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
 </header>
 
 <main id="top">
+  <noscript><style>.hero{grid-template-rows:1fr!important}.hero-text{opacity:1!important;transform:none!important}</style></noscript>
+  <section class="hero" id="hero" aria-label="소개">
+    <div class="hero-in">
+    <div class="hero-media" aria-hidden="true" id="heroMedia">
+      <!-- 정지 이미지 한 장(Unsplash, 1920 가로 / 1080 세로). 영상·유튜브 배경은 v38에서 제거 -->
+      <img id="heroPoster" src="img/hero-hd.jpg" srcset="img/hero-mobile-hd.jpg 1080w, img/hero-hd.jpg 1920w" sizes="(max-width: 860px) 100vw, 1920px" alt="">
+      <div class="hero-slides" id="heroSlides" data-interval="6500"></div>
+    </div>
+    <div class="wrap">
+      <div class="hero-text">
+        <div class="eyebrow">Pacific Links Korea · 수도권지사</div>
+        <h1>주말 라운드, 수도권 276곳에서 <br>그린피 절반으로</h1>
+        <p class="sub">멤버십 한 장으로 국내 276곳, 전 세계 1,000여 코스. 개인·법인 멤버십을 담당 지사장이 직접 안내합니다.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#products" data-track="hero_cta_click">내게 맞는 상품 확인</a>
+          <a class="btn btn-ghost" href="#contact" data-track="hero_form_click">자료 받기</a>
+        </div>
+        <p class="owner">담당: 강현식 지사장 · 접수 후 24시간 내 회신 · <a class="video-link" href="#cf" data-track="hero_video_click">이병헌 CF 보기 ↓</a></p>
+      </div>
+    </div>
+    </div>
+  </section>
+
   <section class="band logo-band" id="brand" aria-label="신뢰">
     <div class="wrap">
       <div class="lg" id="logoStats">
@@ -710,29 +733,6 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
       </div>
       <p class="lg-tag"><b>SINCE 2009</b>캐나다 창립 · 글로벌 골프 멤버십 · 수도권지사</p>
       <ul class="lg-row" aria-hidden="true"><li><b>276<i>곳</i></b><span>국내 제휴 골프장</span></li><li><b>1,000+</b><span>해외 제휴 코스</span></li><li><b>2<i>년 연속</i></b><span>스타브랜드 대상</span></li></ul>
-    </div>
-  </section>
-
-  <noscript><style>.hero{grid-template-rows:1fr!important}.hero-text{opacity:1!important;transform:none!important}</style></noscript>
-  <section class="hero" id="hero" aria-label="소개">
-    <div class="hero-in">
-    <div class="hero-media" aria-hidden="true" id="heroMedia">
-      <!-- 정지 이미지 한 장(Unsplash, 1920 가로 / 1080 세로). 영상·유튜브 배경은 v38에서 제거 -->
-      <img id="heroPoster" src="img/hero-hd.jpg" srcset="img/hero-mobile-hd.jpg 1080w, img/hero-hd.jpg 1920w" sizes="(max-width: 860px) 100vw, 1920px" alt="">
-      <div class="hero-slides" id="heroSlides" data-interval="6500"></div>
-    </div>
-    <div class="wrap">
-      <div class="hero-text">
-        <div class="eyebrow">Pacific Links Korea · 수도권지사</div>
-        <h1>주말 라운드, 수도권 276곳에서 <br>그린피 절반으로</h1>
-        <p class="sub">멤버십 한 장으로 국내 276곳, 전 세계 1,000여 코스. 개인·법인 멤버십을 담당 지사장이 직접 안내합니다.</p>
-        <div class="cta">
-          <a class="btn btn-primary" href="#products" data-track="hero_cta_click">내게 맞는 상품 확인</a>
-          <a class="btn btn-ghost" href="#contact" data-track="hero_form_click">자료 받기</a>
-        </div>
-        <p class="owner">담당: 강현식 지사장 · 접수 후 24시간 내 회신 · <a class="video-link" href="#cf" data-track="hero_video_click">이병헌 CF 보기 ↓</a></p>
-      </div>
-    </div>
     </div>
   </section>
 
@@ -1426,7 +1426,7 @@ function countUp() {
   });
   const finish = el => numsOf(el).forEach(n => n.textContent = (+n.dataset.count).toLocaleString('ko-KR') + (n.dataset.suffix || ''));
   // 히어로 높이 = 가용 높이 − 헤더 − 로고 밴드
-  const size = () => { document.documentElement.style.setProperty('--lgH', band.offsetHeight + 'px'); document.documentElement.style.setProperty('--hdrH', (hdr ? hdr.offsetHeight : 76) + 'px'); };
+  const size = () => { const r = document.documentElement.style; r.setProperty('--lgH', band.offsetHeight + 'px'); r.setProperty('--hdrH', (hdr ? hdr.offsetHeight : 76) + 'px'); const w = hero.querySelector('.wrap'); if (w) r.setProperty('--heroH', w.offsetHeight + 'px'); };
   size(); addEventListener('resize', size);
   const open = () => { size(); hero.classList.add('open'); };
   // 헤더 로고: 로고 밴드가 반 이상 보이면 숨김
