@@ -1,0 +1,53 @@
+# GitHub Pages 배포 (pacificlinks.gssem.kr)
+# 사용 조건: 저장소 Settings → Pages → Source 를 "GitHub Actions" 로 설정
+# - push 때 배포
+# - 30분마다 한 번 확인해서 main 최신 커밋이 아직 배포되지 않았으면 배포 (자동화 계정의 push 로 이벤트가 안 걸리는 경우 대비)
+# - Actions 탭에서 "Run workflow" 로 수동 배포
+name: Deploy Pages
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  deployments: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.c.outputs.deploy }}
+    steps:
+      - id: c
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ]; then echo "deploy=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          last=$(gh api "repos/${{ github.repository }}/deployments?environment=github-pages&per_page=1" --jq '.[0].sha' || echo "")
+          if [ "$last" = "${{ github.sha }}" ]; then echo "deploy=false" >> "$GITHUB_OUTPUT"; else echo "deploy=true" >> "$GITHUB_OUTPUT"; fi
+  deploy:
+    needs: check
+    if: needs.check.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.d.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: 배포 파일만 모으기
+        run: |
+          mkdir -p _site
+          cp -r index.html img data media _site/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: d
+        uses: actions/deploy-pages@v4
