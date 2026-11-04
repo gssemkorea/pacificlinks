@@ -72,46 +72,59 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .ver:hover{border-color:#14202C}
 @media (max-width:860px){.anchors{display:none}.ver{margin-left:auto}}
 
-/* hero */
-.hero{position:relative;color:var(--on-dark);background:var(--navy);overflow:hidden}
-.hero-media{position:absolute;left:0;right:0;bottom:0;height:var(--heroH,100%);overflow:hidden}
-.hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%}
-.hero-slides{position:absolute;inset:0}
-/* 히어로 펼침: 처음엔 높이 0(로고 밴드가 첫 화면). 로고 애니메이션이 끝나면 히어로가 위에서 펼쳐지며 로고 밴드를 아래로 밀어냄. 높이 = 가용 − 헤더 − 밴드(최소 420) → 펼친 뒤 밴드 하단이 화면 하단 */
-.hero{display:grid;grid-template-rows:0fr;transition:grid-template-rows .9s cubic-bezier(.7,0,.3,1)}
+/* hero: 이병헌 CF (시네마 → 도킹) */
+.hero{position:relative;color:var(--on-dark);background:#08121F;overflow:clip;display:grid;grid-template-rows:0fr;transition:grid-template-rows .9s cubic-bezier(.7,0,.3,1)}
 .hero.open{grid-template-rows:1fr}
-.hero-in{min-height:0;overflow:hidden;position:relative;display:grid;align-content:end}
-.hero .wrap{min-height:clamp(420px,calc(100svh - var(--hdrH,76px) - var(--lgH,380px)),860px);box-sizing:border-box;padding-block:clamp(20px,2.2vw,40px)}
-.hero-text{opacity:0;transform:translateY(-14px);transition:opacity .6s ease .5s,transform .6s ease .5s}
-.hero.open .hero-text{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.hero{transition:none}.hero-text{transition:none}}
+.hero-in{min-height:0;overflow:clip;position:relative}
+@media (prefers-reduced-motion:reduce){.hero{transition:none}}
+.hero-scroll{position:relative;height:calc((100svh - var(--hdrH,76px)) * 1.8)}
+.hero-sticky{position:sticky;top:var(--hdrH,76px);height:calc(100svh - var(--hdrH,76px));overflow:hidden}
+.hero-amb{position:absolute;left:-8%;top:-8%;width:116%;height:116%;filter:blur(46px) brightness(.4) saturate(1.3);opacity:calc(1 - var(--hp,0) * .5);pointer-events:none}
+.hero-sticky::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(4,10,20,.55));pointer-events:none}
+.cf-box{position:absolute;left:0;top:0;z-index:2;transform-origin:0 0;background:#000;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55);will-change:transform}
+.cf-box video,.cf-box img{display:block;width:100%;height:100%;object-fit:contain;background:#000}
+.cf-box img{position:absolute;inset:0;transition:opacity .4s}
+.cf-box.playing img{opacity:0}
+.cfh-play{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;display:none;place-items:center;cursor:pointer;backdrop-filter:blur(6px);z-index:2}
+.cfh-play svg{width:34px;height:34px;margin-left:5px}
+.cf-box.idle .cfh-play{display:grid}
+.cf-ctrl{position:absolute;z-index:3;display:flex;gap:8px;left:0;top:0;will-change:transform}
+.cf-ctrl button{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 13px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(8,18,31,.55);color:#fff;font:700 13px/1 var(--body);cursor:pointer;backdrop-filter:blur(6px);white-space:nowrap}
+.cf-ctrl button:hover{background:rgba(255,255,255,.14)}
+.cf-ctrl button svg{width:16px;height:16px}
+.cf-ctrl .cf-sound[aria-pressed="true"]{background:#fff;color:#0E1C2E;border-color:#fff}
+.hero-cue{position:absolute;left:0;right:0;bottom:0;z-index:2;height:64px;display:flex;align-items:center;gap:18px;padding:0 var(--cueX,24px);opacity:calc(1 - var(--hp,0) * 3);pointer-events:none}
+.hero-cue b{font-size:clamp(15px,1.25vw,19px);font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.hero-cue span{font-size:11px;letter-spacing:.24em;color:#A9B7C6;font-weight:700;display:flex;align-items:center;gap:6px}
+.hero-cue span i{width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);animation:cueB 1.6s ease-in-out infinite}
+@keyframes cueB{0%,100%{transform:translateY(-2px) rotate(45deg);opacity:.5}50%{transform:translateY(2px) rotate(45deg);opacity:1}}
+.hero-text{position:absolute;z-index:3;top:50%;left:var(--txX,24px);width:var(--txW,440px);transform:translate(calc((1 - var(--ht,0)) * -24px),-50%);opacity:var(--ht,0);pointer-events:none;display:grid;gap:16px;text-align:left}
+.hero.docked .hero-text{pointer-events:auto}
+.hero h1{font-size:clamp(28px,2.6vw,44px);line-height:1.2;letter-spacing:-.02em;margin:0}
+.hero h1 span{display:block}
+.hero .sub{font-size:clamp(15px,1.05vw,17px);color:var(--on-dark-muted);line-height:1.65;margin:0}
+.hero .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.hero .owner{font-size:13.5px;color:var(--on-dark-muted);margin:0}
+.hero .cf-note{font-size:11.5px;color:#7F90A3;margin:0}
+/* 모바일·좁은 화면: 스크롤 연출 없음 */
+@media (max-width:860px){
+  .hero-scroll{height:auto}
+  .hero-sticky{position:static;height:auto;overflow:visible}
+  .hero-amb,.hero-sticky::after,.hero-cue{display:none}
+  .cf-box{position:relative;width:100%!important;height:auto!important;aspect-ratio:16/9;transform:none!important;box-shadow:none}
+  .cf-ctrl{position:static;transform:none!important;padding:10px 16px 0;justify-content:flex-end}
+  .hero-text{position:static;width:auto;transform:none;opacity:1;pointer-events:auto;padding:18px 16px 30px}
+  .hero h1{font-size:26px}.hero h1 span{display:inline}
+}
+/* 동작 줄이기: 처음부터 도킹 상태, 스크롤 공간 없음 */
+@media (min-width:861px) and (prefers-reduced-motion:reduce){.hero-scroll{height:calc(100svh - var(--hdrH,76px))}}
 /* 짧은 화면(노트북 1366×768 등): 로고 밴드 압축 */
-@media (min-width:861px) and (max-height:820px){.logo-band{padding:14px 0 10px}.logo-band .lg{width:min(100%,560px)}.hero .video-link{display:none}.hero .wrap{padding-block:22px}}
-/* 로고 밴드가 보이는 동안 헤더 로고 숨김 (중복 방지) */
+@media (min-width:861px) and (max-height:820px){.logo-band{padding:14px 0 10px}.logo-band .lg{width:min(100%,560px)}}
+/* 로고 애니메이션 동안 헤더 로고 숨김 */
 .brand{transition:opacity .35s}
 header.no-brand .brand{opacity:0;pointer-events:none}
-.hero-slides img{opacity:0;transition:opacity 1.6s ease;will-change:opacity,transform}
-.hero-slides img.on{opacity:1;animation:heroKb 8s linear forwards}
-@keyframes heroKb{from{transform:scale(1)}to{transform:scale(1.07)}}
-@media (prefers-reduced-motion:reduce){.hero-slides img.on{animation:none}}
-.hero-media video{opacity:0;transition:opacity .6s}
-.hero-media video.playing{opacity:1}
-/* YouTube 배경: 16:9를 화면에 꽉 채우도록 중앙 확대 */
-.hero-media .yt{position:absolute;top:50%;left:50%;width:max(100%,177.78vh);height:max(100%,56.25vw);transform:translate(-50%,-50%);border:0;pointer-events:none;opacity:0;transition:opacity .8s}
-.hero-media .yt.playing{opacity:1}
-.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,14,24,.45) 0%,rgba(6,14,24,.62) 55%,rgba(6,14,24,.92) 100%)}
-.hero .wrap{position:relative;display:grid;grid-template-columns:1fr;gap:24px;align-items:center;justify-items:center;text-align:center}
-@media (max-width:860px){.hero .wrap{grid-template-columns:1fr}}
-.hero-text{display:grid;gap:14px;justify-items:center;max-width:940px}
-.hero h1{font-size:clamp(28px,3.6vw,48px);max-width:none;line-height:1.18;white-space:nowrap}
-@media (max-width:640px){.hero h1{white-space:normal}}
-@media (max-width:640px){.hero h1 br{display:none}}
-.hero .sub{font-size:clamp(16px,1.6vw,19px);color:var(--on-dark-muted);max-width:30em}
-.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;justify-content:center}
-.hero .owner{font-size:14px;color:var(--on-dark-muted)}
-.hero .video-link{font-size:14px;color:var(--on-dark-muted);text-decoration:underline;text-underline-offset:3px}
-.hero-person{justify-self:end;align-self:end;width:min(440px,100%);max-height:620px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 24px 36px rgba(0,0,0,.5));margin-bottom:calc(-1 * clamp(48px,7vw,88px))}
-@media (max-width:860px){.hero-person{justify-self:center;width:min(300px,78%);margin-bottom:calc(-1 * clamp(48px,7vw,88px))}}
+.dock{transition:opacity .3s,transform .3s}
+body.hero-focus .dock{opacity:0;transform:translateY(12px);pointer-events:none}
 
 /* ===== 로고 지표 밴드: 고리는 벡터(원본 측정값), 리본은 사진 패턴 스트로크, 완성 시 원본 PNG로 교체 ===== */
 .logo-band{background:radial-gradient(1100px 520px at 50% 0,#17406E,#0B1C33 72%);color:#fff;padding:18px 0 14px;position:relative;z-index:2}
@@ -624,7 +637,6 @@ body.full .strip div,body.full .evt>.ev{border-color:rgba(255,255,255,.14)}
 body.full .strip b{color:var(--blue-light)}
 body.full .rev blockquote{background:rgba(255,255,255,.08)}
 body.full .form input,body.full .form select{background:rgba(0,0,0,.3);color:#fff;border-color:rgba(255,255,255,.2)}
-body.full .hero-media{display:none}
 body.full .hero{background:transparent}
 body.full footer{border-color:rgba(255,255,255,.12)}
 body.full .evt time{color:var(--blue-light)}
@@ -653,26 +665,34 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
 </header>
 
 <main id="top">
-  <noscript><style>.hero{grid-template-rows:1fr!important}.hero-text{opacity:1!important;transform:none!important}</style></noscript>
+  <noscript><style>.hero{grid-template-rows:1fr!important}.hero-text{opacity:1!important}</style></noscript>
   <section class="hero" id="hero" aria-label="소개">
     <div class="hero-in">
-    <div class="hero-media" aria-hidden="true" id="heroMedia">
-      <!-- 정지 이미지 한 장(Unsplash, 1920 가로 / 1080 세로). 영상·유튜브 배경은 v38에서 제거 -->
-      <img id="heroPoster" src="img/hero-hd.jpg" srcset="img/hero-mobile-hd.jpg 1080w, img/hero-hd.jpg 1920w" sizes="(max-width: 860px) 100vw, 1920px" alt="">
-      <div class="hero-slides" id="heroSlides" data-interval="6500"></div>
-    </div>
-    <div class="wrap">
-      <div class="hero-text">
-        <div class="eyebrow">Pacific Links Korea · 수도권지사</div>
-        <h1>주말 라운드, 수도권 276곳에서 <br>그린피 절반으로</h1>
-        <p class="sub">멤버십 한 장으로 국내 276곳, 전 세계 1,000여 코스. 개인·법인 멤버십을 담당 지사장이 직접 안내합니다.</p>
-        <div class="cta">
-          <a class="btn btn-primary" href="#products" data-track="hero_cta_click">내게 맞는 상품 확인</a>
-          <a class="btn btn-ghost" href="#contact" data-track="hero_form_click">자료 받기</a>
+      <div class="hero-scroll" id="heroScroll">
+        <div class="hero-sticky" id="heroSticky">
+          <canvas class="hero-amb" id="heroAmb" width="64" height="36" aria-hidden="true"></canvas>
+          <div class="cf-box idle" id="cfHeroBox">
+            <img src="img/cf-hero-poster.jpg" srcset="img/cf-hero-poster-960.jpg 960w, img/cf-hero-poster.jpg 1920w" sizes="(max-width:860px) 100vw, 80vw" alt="">
+            <video id="cfHero" muted playsinline loop preload="metadata" aria-label="퍼시픽링스코리아 전속모델 이병헌 TV CF 15초" data-src-hd="media/cf-hero-1080.mp4" data-src-sd="media/cf-hero-720.mp4"></video>
+            <button class="cfh-play" type="button" id="cfHeroPlay" aria-label="CF 재생"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+          </div>
+          <div class="cf-ctrl" id="cfHeroCtrl">
+            <button type="button" class="cf-sound" id="cfHeroSound" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="w1" d="M15.5 8.5a5 5 0 0 1 0 7"/><path class="w2" d="M18.5 5.5a9 9 0 0 1 0 13"/></svg><span>소리 켜기</span></button>
+            <button type="button" class="cf-pause" id="cfHeroPause" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><span>일시정지</span></button>
+          </div>
+          <div class="hero-cue" aria-hidden="true"><b>주말 라운드, 수도권 276곳에서 그린피 절반으로</b><span>SCROLL<i></i></span></div>
+          <div class="hero-text">
+            <div class="eyebrow">Pacific Links Korea · 수도권지사</div>
+            <h1><span>주말 라운드,</span> <span>수도권 276곳에서</span> <span>그린피 절반으로</span></h1>
+            <p class="sub">멤버십 한 장으로 국내 276곳, 전 세계 1,000여 코스. 개인·법인 멤버십을 담당 지사장이 직접 안내합니다.</p>
+            <div class="cta">
+              <a class="btn btn-primary" href="#products" data-track="hero_cta_click">내게 맞는 상품 확인</a>
+              <a class="btn btn-ghost" href="#contact" data-track="hero_form_click">자료 받기</a>
+            </div>
+            <p class="owner">담당: 강현식 지사장 · 접수 후 24시간 내 회신</p>
+          </div>
         </div>
-        <p class="owner">담당: 강현식 지사장 · 접수 후 24시간 내 회신 · <a class="video-link" href="#cf" data-track="hero_video_click">이병헌 CF 보기 ↓</a></p>
       </div>
-    </div>
     </div>
   </section>
 
@@ -1262,30 +1282,92 @@ const CF_YOUTUBE_ID = '5j4Z3RH6RPM';
 let EMBED_BLOCKED = /claude\.ai$|claudeusercontent\.com$|claude\.site$/.test(location.hostname); // 아티팩트 미리보기는 외부 iframe 차단
 document.addEventListener('securitypolicyviolation', e => { if (/youtube/.test(e.blockedURI || '')) { EMBED_BLOCKED = true; document.body.classList.add('embed-blocked'); document.querySelectorAll('.hero-media .yt').forEach(f => f.remove()); } });
 if (EMBED_BLOCKED) document.documentElement.classList.add('embed-blocked');
-const HERO_SLIDES = [ // Unsplash License (무료·상업 이용 가능). 핫링크는 Unsplash 공식 권장 방식. 오프라인/차단 시 로컬 포스터 유지
-  { id: 'photo-1716464968470-c2162dd998e4', pos: 'center 55%', by: 'Tom Schaeffer', what: '코스·야자수' },
-  { id: 'photo-1631294949134-ecd4ecd5f4b2', pos: 'center 30%', by: 'Brandon Williams', what: '스윙' },
-  { id: 'photo-1766206096924-c78074981e84', pos: 'center 40%', by: 'Syah', what: '대회 갤러리' },
-  { id: 'photo-1709525617656-5498eefc7d03', pos: 'center 60%', by: 'Bryce Wendler', what: '그린 햇살' },
-  { id: 'photo-1535131749006-b7f58c99034b', pos: 'center 35%', by: 'Courtney Cook', what: '드라이버 스윙' }
-];
-function setupHeroSlides() {
-  const box = document.getElementById('heroSlides'); if (!box) return;
-  const mobile = matchMedia('(max-width: 860px)').matches;
-  const url = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&q=80&` + (mobile ? 'w=1080&h=1728' : 'w=1920&h=1100');
-  const ready = []; let i = -1, timer = null;
-  const show = () => { if (!ready.length) return; const prev = ready[i]; i = (i + 1) % ready.length; const cur = ready[i]; if (prev && prev !== cur) prev.classList.remove('on'); cur.classList.add('on'); };
-  const heroEl = document.getElementById('hero');
-  const start = () => { if (timer || !ready.length) return; if (heroEl && !heroEl.classList.contains('open')) { heroEl.addEventListener('hero:open', start, { once: true }); return; } show(); timer = setInterval(show, +box.dataset.interval || 6500); };
-  HERO_SLIDES.forEach(s => {
-    const im = new Image(); im.alt = ''; im.decoding = 'async'; im.style.objectPosition = s.pos; im.title = 'Photo: ' + s.by + ' / Unsplash';
-    im.addEventListener('load', () => { box.appendChild(im); ready.push(im); if (ready.length === 1) start(); });
-    im.addEventListener('error', () => {}); im.src = url(s.id);
+function setupHeroCF() {
+  const hero = document.getElementById('hero'), sc = document.getElementById('heroScroll'), st = document.getElementById('heroSticky');
+  const box = document.getElementById('cfHeroBox'), v = document.getElementById('cfHero'), ctrl = document.getElementById('cfHeroCtrl');
+  const amb = document.getElementById('heroAmb'), snd = document.getElementById('cfHeroSound'), pau = document.getElementById('cfHeroPause'), playBtn = document.getElementById('cfHeroPlay');
+  if (!hero || !v) return;
+  const root = document.documentElement.style;
+  const mqMob = matchMedia('(max-width: 860px)'), reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = !!(navigator.connection && navigator.connection.saveData);
+  // 해상도별 소스: 화면 폭 × 배율이 1600 이상이면 1080p, 아니면 720p
+  const pickSrc = () => (!mqMob.matches && innerWidth * (devicePixelRatio || 1) >= 1600) ? v.dataset.srcHd : v.dataset.srcSd;
+  let userPaused = false, started = false, inView = true;
+  const setPlaying = on => { box.classList.toggle('playing', on); box.classList.toggle('idle', !on && !started); pau.setAttribute('aria-pressed', String(!on)); pau.querySelector('span').textContent = on ? '일시정지' : '재생'; pau.querySelector('svg').innerHTML = on ? '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>' : '<path d="M8 5v14l11-7z"/>'; };
+  const play = () => { if (!v.src) v.src = pickSrc(); v.play().then(() => { started = true; setPlaying(true); }).catch(() => setPlaying(false)); };
+  v.addEventListener('playing', () => { started = true; setPlaying(true); });
+  v.addEventListener('pause', () => setPlaying(false));
+  v.muted = true; v.defaultMuted = true; v.setAttribute('muted', '');
+  setPlaying(false);
+  // 자동재생: 히어로가 펼쳐질 때 0초부터 (데이터 절약·동작 줄이기는 재생 버튼만)
+  const auto = !saveData && !reduce;
+  const kick = () => { if (auto && !userPaused) { v.currentTime = 0; play(); } };
+  if (hero.classList.contains('open')) kick(); else hero.addEventListener('hero:open', kick, { once: true });
+  playBtn.addEventListener('click', () => { userPaused = false; play(); track('hero_cf_play'); });
+  pau.addEventListener('click', () => { if (v.paused) { userPaused = false; play(); } else { userPaused = true; v.pause(); } track('hero_cf_pause'); });
+  snd.addEventListener('click', () => {
+    const on = v.muted; v.muted = !on;
+    if (on) { v.currentTime = 0; userPaused = false; play(); }
+    snd.setAttribute('aria-pressed', String(on)); snd.querySelector('span').textContent = on ? '소리 끄기' : '소리 켜기';
+    track(on ? 'hero_cf_sound_on' : 'hero_cf_sound_off');
   });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInterval(timer); timer = null; } else start(); });
+  // 화면 밖이면 일시정지, 돌아오면 이어서 (사용자가 직접 멈춘 경우 제외)
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(en => {
+    inView = en.isIntersecting;
+    if (!started && !auto) return;
+    if (!inView && !v.paused) v.pause(); else if (inView && v.paused && started && !userPaused) play();
+  }), { threshold: .15 }).observe(box);
+  document.addEventListener('visibilitychange', () => { if (document.hidden && !v.paused) v.pause(); else if (!document.hidden && inView && started && !userPaused) play(); });
+  // 앰비언트: 영상(재생 전엔 포스터)을 64×36 캔버스에 그려 CSS로 흐리게
+  const ctx = amb.getContext('2d'); const poster = box.querySelector('img');
+  const paint = src => { try { ctx.drawImage(src, 0, 0, 64, 36); } catch (e) {} };
+  if (poster.complete) paint(poster); else poster.addEventListener('load', () => paint(poster), { once: true });
+  setInterval(() => { if (!v.paused && inView && !mqMob.matches) paint(v); }, 220);
+
+  // 시네마 → 도킹: 히어로 안의 스크롤 진행률로 영상 위치·크기를 보간
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  let G = null;
+  const measure = () => {
+    if (mqMob.matches) { G = null; ['--hp', '--ht'].forEach(k => root.removeProperty(k)); box.style.cssText = ''; ctrl.style.cssText = ''; return; }
+    const W = st.clientWidth, H = st.clientHeight, cue = 64;
+    // 시네마: 큐 띠(64px)를 뺀 높이 안에서 16:9 최대
+    let ch = Math.min(H - cue - 20, (W - 48) * 9 / 16), cw = ch * 16 / 9;
+    const cx = (W - cw) / 2, cy = Math.max(12, (H - cue - ch) / 2);
+    // 도킹: 콘텐츠 폭(최대 1320) 중 왼쪽 38% 문구, 오른쪽 영상 카드
+    const gut = Math.max(24, Math.min(64, W * .04)), wrapW = Math.min(W - gut * 2, 1320), x0 = (W - wrapW) / 2;
+    const txW = Math.max(340, Math.min(500, wrapW * .36)), gap = Math.max(32, wrapW * .035);
+    let dw = wrapW - txW - gap, dh = dw * 9 / 16;
+    if (dh > H - 120) { dh = H - 120; dw = dh * 16 / 9; }
+    const dx = x0 + wrapW - dw, dy = (H - dh) / 2 - 14;
+    G = { cw, ch, cx, cy, dx, dy, s: dw / cw };
+    box.style.width = cw + 'px'; box.style.height = ch + 'px';
+    root.setProperty('--txX', x0 + 'px'); root.setProperty('--txW', txW + 'px'); root.setProperty('--cueX', cx + 'px');
+    frame();
+  };
+  const frame = () => {
+    if (!G) return;
+    let p = 1;
+    if (!reduce) { const r = sc.getBoundingClientRect(), room = sc.offsetHeight - st.clientHeight; p = room > 0 ? Math.min(1, Math.max(0, -r.top / room)) : 1; }
+    const e = ease(Math.min(1, Math.max(0, (p - .12) / .72)));   // 처음 12%는 시네마 유지
+    const x = G.cx + (G.dx - G.cx) * e, y = G.cy + (G.dy - G.cy) * e, s = 1 + (G.s - 1) * e;
+    box.style.transform = `translate(${x}px,${y}px) scale(${s})`;
+    box.style.borderRadius = (16 * e / s) + 'px';
+    const bw = G.cw * s, bh = G.ch * s;
+    ctrl.style.transform = `translate(${x + (bw - ctrl.offsetWidth) * (1 - e)}px,${y + bh + 12}px)`;   // 시네마: 오른쪽 정렬 → 도킹: 왼쪽 정렬(플로팅 버튼과 겹침 방지)
+    root.setProperty('--hp', e.toFixed(3));
+    root.setProperty('--ht', Math.min(1, Math.max(0, (e - .45) / .45)).toFixed(3));
+    hero.classList.toggle('docked', e > .6);
+    const hr = sc.getBoundingClientRect(); document.body.classList.toggle('hero-focus', hr.bottom > innerHeight * .55 && hr.top < innerHeight * .4);
+  };
+  let raf = 0; const onScroll = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; frame(); }); };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', measure);
+  (mqMob.addEventListener ? mqMob.addEventListener('change', measure) : mqMob.addListener(measure));
+  hero.addEventListener('hero:open', measure);
+  measure(); setTimeout(measure, 950);
 }
 function setupVideo() {
-  setupHeroSlides();
+  setupHeroCF();
   // CF 섹션: 자체 호스팅 CF 재생
   const cv = document.getElementById('cfVideo'), cb = document.getElementById('cfBox');
   document.getElementById('cfPlay').addEventListener('click', () => { cb.classList.add('playing'); cv.play().catch(() => {}); track('cf_play_click'); });
@@ -1467,7 +1549,7 @@ function countUp() {
   // 히어로 높이 = 가용 높이 − 헤더 − 로고 밴드
   const size = () => { const r = document.documentElement.style; r.setProperty('--lgH', band.offsetHeight + 'px'); r.setProperty('--hdrH', (hdr ? hdr.offsetHeight : 76) + 'px'); const w = hero.querySelector('.wrap'); if (w) r.setProperty('--heroH', w.offsetHeight + 'px'); };
   size(); addEventListener('resize', size);
-  const open = () => { size(); if (hero.classList.contains('open')) return; hero.classList.add('open'); if (hdr) hdr.classList.remove('no-brand'); setTimeout(() => hero.dispatchEvent(new Event('hero:open')), 300); };
+  const open = () => { size(); if (hero.classList.contains('open')) return; hero.classList.add('open'); if (hdr) hdr.classList.remove('no-brand'); setTimeout(() => hero.dispatchEvent(new Event('hero:open')), 120); };
   // 헤더 로고: 로고 밴드가 반 이상 보이면 숨김
   // 재생 규칙: 페이지를 열 때마다 로고 애니메이션 → 히어로 펼침. 해시 진입(#faq 등)·동작 축소·?nointro·data-intro="off"만 즉시 펼친 상태
   const skip = document.body.dataset.intro === 'off' || reduce || location.hash.length > 1 || location.search.includes('nointro');
