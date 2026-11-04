@@ -88,6 +88,11 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .cfh-play{position:absolute;inset:0;margin:auto;width:84px;height:84px;border-radius:50%;border:0;background:rgba(0,0,0,.55);color:#fff;display:none;place-items:center;cursor:pointer;backdrop-filter:blur(6px);z-index:2}
 .cfh-play svg{width:34px;height:34px;margin-left:5px}
 .cf-box.idle .cfh-play{display:grid}
+.cfh-unmute{position:absolute;left:50%;top:6%;transform:translateX(-50%);z-index:2;display:none;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:rgba(8,18,31,.62);color:#fff;font:800 16px/1 var(--body);cursor:pointer;backdrop-filter:blur(8px);white-space:nowrap;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.cfh-unmute svg{width:22px;height:22px}
+.cfh-unmute:hover{background:rgba(22,89,158,.85)}
+.cf-box.playing.muted-auto .cfh-unmute{display:inline-flex}
+@media (max-width:860px){.cfh-unmute{font-size:14px;padding:10px 16px}}
 .cf-ctrl{position:absolute;z-index:3;display:flex;gap:8px;left:0;top:0;will-change:transform}
 .cf-ctrl button{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 13px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(8,18,31,.55);color:#fff;font:700 13px/1 var(--body);cursor:pointer;backdrop-filter:blur(6px);white-space:nowrap}
 .cf-ctrl button:hover{background:rgba(255,255,255,.14)}
@@ -666,6 +671,7 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
           <div class="cf-box idle" id="cfHeroBox">
             <img src="img/cf-hero-poster.jpg" srcset="img/cf-hero-poster-960.jpg 960w, img/cf-hero-poster.jpg 1920w" sizes="(max-width:860px) 100vw, 80vw" alt="">
             <video id="cfHero" muted playsinline loop preload="metadata" aria-label="퍼시픽링스코리아 전속모델 이병헌 TV CF 15초" data-src-hd="media/cf-hero-1080.mp4" data-src-sd="media/cf-hero-720.mp4"></video>
+            <button class="cfh-unmute" type="button" id="cfHeroUnmute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>소리 켜고 처음부터 보기</button>
             <button class="cfh-play" type="button" id="cfHeroPlay" aria-label="CF 재생"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
           </div>
           <div class="cf-ctrl" id="cfHeroCtrl">
@@ -1274,13 +1280,13 @@ function setupHeroCF() {
   v.addEventListener('pause', () => setPlaying(false));
   // 소리 기본 ON: 소리와 함께 재생을 먼저 시도하고, 브라우저가 막으면(첫 방문 자동재생 정책) 무음으로 재생한 뒤
   // 사용자가 페이지를 처음 클릭·터치·키 입력하는 순간 소리를 켭니다. 사용자가 직접 끈 경우는 기억해서 다시 켜지 않음.
-  let soundOff = false; try { soundOff = localStorage.getItem('plk-cf-sound') === 'off'; } catch (e) {}
-  const syncSnd = () => { const on = !v.muted; snd.setAttribute('aria-pressed', String(on)); snd.querySelector('span').textContent = on ? '소리 끄기' : '소리 켜기'; snd.classList.toggle('nudge', !on && !soundOff); };
+  let soundOff = false; try { soundOff = sessionStorage.getItem('plk-cf-sound') === 'off'; localStorage.removeItem('plk-cf-sound'); } catch (e) {}
+  const syncSnd = () => { const on = !v.muted; snd.setAttribute('aria-pressed', String(on)); snd.querySelector('span').textContent = on ? '소리 끄기' : '소리 켜기'; snd.classList.toggle('nudge', !on && !soundOff); box.classList.toggle('muted-auto', !on && !soundOff); };
   v.addEventListener('volumechange', syncSnd);
   let waiting = false;
   const unmuteOnGesture = () => {
     if (waiting || soundOff) return; waiting = true;
-    const go = ev => { if (ev.target.closest && ev.target.closest('#cfHeroSound, #cfHeroPause')) return; ['pointerdown', 'keydown', 'touchend'].forEach(t => removeEventListener(t, go, true)); waiting = false; if (!soundOff && v.muted) { v.muted = false; if (v.paused && started && !userPaused) play(); } };
+    const go = ev => { if (ev.target.closest && ev.target.closest('#cfHeroSound, #cfHeroPause, #cfHeroUnmute')) return; ['pointerdown', 'keydown', 'touchend'].forEach(t => removeEventListener(t, go, true)); waiting = false; if (!soundOff && v.muted) { v.muted = false; if (v.paused && started && !userPaused) play(); } };
     ['pointerdown', 'keydown', 'touchend'].forEach(t => addEventListener(t, go, true));
   };
   v.muted = soundOff; v.defaultMuted = soundOff;
@@ -1291,10 +1297,11 @@ function setupHeroCF() {
   const kick = () => { if (auto && !userPaused) { v.currentTime = 0; play(); } };
   if (hero.classList.contains('open')) kick(); else hero.addEventListener('hero:open', kick, { once: true });
   playBtn.addEventListener('click', () => { userPaused = false; play(); track('hero_cf_play'); });
+  document.getElementById('cfHeroUnmute').addEventListener('click', () => { soundOff = false; v.muted = false; v.currentTime = 0; userPaused = false; play(); syncSnd(); track('hero_cf_unmute_overlay'); });
   pau.addEventListener('click', () => { if (v.paused) { userPaused = false; play(); } else { userPaused = true; v.pause(); } track('hero_cf_pause'); });
   snd.addEventListener('click', () => {
     const on = v.muted; v.muted = !on; soundOff = !on;
-    try { localStorage.setItem('plk-cf-sound', on ? 'on' : 'off'); } catch (e) {}
+    try { sessionStorage.setItem('plk-cf-sound', on ? 'on' : 'off'); } catch (e) {}
     if (on && (v.paused || !started)) { userPaused = false; play(); }
     syncSnd(); track(on ? 'hero_cf_sound_on' : 'hero_cf_sound_off');
   });
