@@ -126,18 +126,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 }
 /* 동작 줄이기: 처음부터 도킹 상태, 스크롤 공간 없음 */
 @media (min-width:861px) and (prefers-reduced-motion:reduce){.hero-scroll{height:calc(100svh - var(--hdrH,76px))}}
-.cf-ctrl .cf-film{background:rgba(22,89,158,.85);border-color:rgba(255,255,255,.45)}
-.cf-ctrl .cf-film:hover{background:#1B66B5}
-/* 풀버전 뷰어 */
-.film-dlg{padding:0;border:0;background:transparent;width:min(92vw,calc((100svh - 140px) * 16 / 9),1600px);max-width:none;max-height:none;overflow:visible}
-.film-dlg::backdrop{background:rgba(3,8,16,.88);backdrop-filter:blur(6px)}
-.film-in{display:grid;gap:12px}
-.film-in video{width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;display:block}
-.film-bar{display:flex;align-items:center;gap:14px;color:#fff;font-size:14px}
-.film-bar span{color:#A9B7C6;font-size:13px}
-.film-x{margin-left:auto;min-height:38px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;font:700 14px/1 var(--body);cursor:pointer}
-.film-x:hover{background:rgba(255,255,255,.12)}
-@media (max-width:860px){.cf-ctrl{flex-wrap:wrap;gap:6px}.cf-ctrl button{min-height:32px;padding:0 10px;font-size:12px}.film-dlg{width:100vw}.film-in video{border-radius:0}.film-bar{padding:0 14px;flex-wrap:wrap}.film-bar span{display:none}}
+@media (max-width:860px){.cf-ctrl{flex-wrap:wrap;gap:6px}.cf-ctrl button{min-height:32px;padding:0 10px;font-size:12px}}
 /* 섹션 경계 스냅: 근처에 왔을 때만 살짝(proximity), 3지점만 — 히어로 도킹 완료 · 로고 밴드 · 멤버십 시작. 모바일·동작 줄이기 제외 */
 .snap-mark{position:absolute;left:0;width:1px;height:1px;top:calc(100% - (100svh - var(--hdrH,76px)));pointer-events:none}
 @media (min-width:861px) and (prefers-reduced-motion:no-preference){
@@ -424,7 +413,6 @@ body.no-tts .vbtn.tts-only{display:none}
 .promo .btn-primary{background:#1E1A14;color:#F3DE9A}
 .promo .btn-primary:hover{background:#3A3225}
 .promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
-/* brand film */
 /* corporate */
 .split{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
 .split .sec-title{grid-column:1/-1;margin-bottom:0}
@@ -689,14 +677,13 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
           <canvas class="hero-amb" id="heroAmb" width="64" height="36" aria-hidden="true"></canvas>
           <div class="cf-box idle" id="cfHeroBox">
             <img src="img/cf-hero-poster.jpg" srcset="img/cf-hero-poster-960.jpg 960w, img/cf-hero-poster.jpg 1920w" sizes="(max-width:860px) 100vw, 80vw" alt="">
-            <video id="cfHero" muted playsinline loop preload="metadata" aria-label="퍼시픽링스코리아 전속모델 이병헌 TV CF 15초" data-src-hd="media/cf-hero-1080.mp4" data-src-sd="media/cf-hero-720.mp4"></video>
+            <video id="cfHero" muted playsinline loop preload="metadata" aria-label="퍼시픽링스코리아 전속모델 이병헌 브랜드 필름 60초" data-src-hd="media/cf-hero-1080.mp4" data-src-sd="media/cf-hero-720.mp4"></video>
             <button class="cfh-unmute" type="button" id="cfHeroUnmute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>소리 켜고 처음부터 보기</button>
             <button class="cfh-play" type="button" id="cfHeroPlay" aria-label="CF 재생"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
           </div>
           <div class="cf-ctrl" id="cfHeroCtrl">
             <button type="button" class="cf-sound" id="cfHeroSound" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="w1" d="M15.5 8.5a5 5 0 0 1 0 7"/><path class="w2" d="M18.5 5.5a9 9 0 0 1 0 13"/></svg><span>소리 켜기</span></button>
             <button type="button" class="cf-pause" id="cfHeroPause" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><span>일시정지</span></button>
-            <button type="button" class="cf-film" id="cfFilmOpen" aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg><span>풀버전 보기 · 60초</span></button>
           </div>
           <div class="hero-cue" aria-hidden="true"><b>주말 라운드, 수도권 276곳에서 그린피 절반으로</b><span>SCROLL<i></i></span></div>
           <div class="hero-text">
@@ -1021,13 +1008,6 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
   </footer>
 </main>
 
-<dialog class="film-dlg" id="filmDlg" aria-label="이병헌 브랜드 필름 60초">
-  <div class="film-in">
-    <video id="filmVideo" controls playsinline preload="none" poster="img/cf-film-poster.jpg" data-src-hd="media/cf-film-1080.mp4" data-src-sd="media/cf-film-720.mp4"></video>
-    <div class="film-bar"><b>퍼시픽링스코리아 × 이병헌 · Brand Film</b><span>더 넓은 세계로 라운드 하라 · 60초</span><button type="button" class="film-x" id="filmClose" aria-label="닫기">닫기 ✕</button></div>
-  </div>
-</dialog>
-
 <!-- 상품 설명서 라이트박스 -->
 <div class="fpop" id="fpop" hidden role="dialog" aria-modal="true" aria-labelledby="fpopTitle">
   <div class="fpop-back" id="fpopBack"></div>
@@ -1305,6 +1285,7 @@ function setupHeroCF() {
   }); };
   v.addEventListener('playing', () => { started = true; setPlaying(true); });
   v.addEventListener('pause', () => setPlaying(false));
+  v.addEventListener('error', () => { if (v.src && v.src.indexOf(v.dataset.srcSd) < 0) { v.src = v.dataset.srcSd; if (started || !userPaused) play(); } });
   // 소리 기본 ON: 소리와 함께 재생을 먼저 시도하고, 브라우저가 막으면(첫 방문 자동재생 정책) 무음으로 재생한 뒤
   // 사용자가 페이지를 처음 클릭·터치·키 입력하는 순간 소리를 켭니다. 사용자가 직접 끈 경우는 기억해서 다시 켜지 않음.
   let soundOff = false; try { soundOff = sessionStorage.getItem('plk-cf-sound') === 'off'; localStorage.removeItem('plk-cf-sound'); } catch (e) {}
@@ -1387,27 +1368,8 @@ function setupHeroCF() {
   hero.addEventListener('hero:open', measure);
   measure(); setTimeout(measure, 950);
 }
-function setupFilm() {
-  const dlg = document.getElementById('filmDlg'), fv = document.getElementById('filmVideo'), open = document.getElementById('cfFilmOpen'), hv = document.getElementById('cfHero');
-  if (!dlg || !fv || !open) return;
-  let heroWasPlaying = false;
-  const close = () => { fv.pause(); if (dlg.open) dlg.close(); };
-  open.addEventListener('click', () => {
-    heroWasPlaying = hv && !hv.paused; if (hv) hv.pause();
-    if (!fv.src) fv.src = (innerWidth * (devicePixelRatio || 1) >= 1400 && !(navigator.connection && navigator.connection.saveData)) ? fv.dataset.srcHd : fv.dataset.srcSd;
-    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
-    fv.muted = false; fv.currentTime = 0; fv.play().catch(() => {});
-    track('film_open');
-  });
-  document.getElementById('filmClose').addEventListener('click', close);
-  dlg.addEventListener('click', e => { if (e.target === dlg) close(); });   // 바깥(배경) 클릭 닫기
-  dlg.addEventListener('close', () => { fv.pause(); if (heroWasPlaying && hv) hv.play().catch(() => {}); track('film_close', { t: Math.round(fv.currentTime) }); });
-  fv.addEventListener('ended', () => track('film_complete'));
-  // 고화질 파일을 못 불러오면 720p로 대체
-  fv.addEventListener('error', () => { if (fv.src.indexOf(fv.dataset.srcSd) < 0) { fv.src = fv.dataset.srcSd; fv.play().catch(() => {}); } });
-}
 function setupVideo() {
-  setupHeroCF(); setupFilm();
+  setupHeroCF();
 }
 
 /* ===== 상품 설명서 라이트박스 ===== */
