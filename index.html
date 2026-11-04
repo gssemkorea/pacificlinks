@@ -1403,6 +1403,8 @@ function setupFilm() {
   dlg.addEventListener('click', e => { if (e.target === dlg) close(); });   // 바깥(배경) 클릭 닫기
   dlg.addEventListener('close', () => { fv.pause(); if (heroWasPlaying && hv) hv.play().catch(() => {}); track('film_close', { t: Math.round(fv.currentTime) }); });
   fv.addEventListener('ended', () => track('film_complete'));
+  // 고화질 파일을 못 불러오면 720p로 대체
+  fv.addEventListener('error', () => { if (fv.src.indexOf(fv.dataset.srcSd) < 0) { fv.src = fv.dataset.srcSd; fv.play().catch(() => {}); } });
 }
 function setupVideo() {
   setupHeroCF(); setupFilm();
