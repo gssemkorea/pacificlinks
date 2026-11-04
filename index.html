@@ -666,7 +666,7 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
 
 <main id="top">
   <noscript><style>.hero{grid-template-rows:1fr!important}.hero-text{opacity:1!important}</style></noscript>
-  <section class="hero" id="hero" aria-label="소개">
+  <section class="hero open" id="hero" aria-label="소개">
     <div class="hero-in">
       <div class="hero-scroll" id="heroScroll">
         <div class="hero-sticky" id="heroSticky">
@@ -1549,18 +1549,13 @@ function countUp() {
   // 히어로 높이 = 가용 높이 − 헤더 − 로고 밴드
   const size = () => { const r = document.documentElement.style; r.setProperty('--lgH', band.offsetHeight + 'px'); r.setProperty('--hdrH', (hdr ? hdr.offsetHeight : 76) + 'px'); const w = hero.querySelector('.wrap'); if (w) r.setProperty('--heroH', w.offsetHeight + 'px'); };
   size(); addEventListener('resize', size);
-  const open = () => { size(); if (hero.classList.contains('open')) return; hero.classList.add('open'); if (hdr) hdr.classList.remove('no-brand'); setTimeout(() => hero.dispatchEvent(new Event('hero:open')), 120); };
-  // 헤더 로고: 로고 밴드가 반 이상 보이면 숨김
-  // 재생 규칙: 페이지를 열 때마다 로고 애니메이션 → 히어로 펼침. 해시 진입(#faq 등)·동작 축소·?nointro·data-intro="off"만 즉시 펼친 상태
-  const skip = document.body.dataset.intro === 'off' || reduce || location.hash.length > 1 || location.search.includes('nointro');
-  if (skip) { finish(lg); lg.classList.add('done'); open(); return; }
-  if (hdr) hdr.classList.add('no-brand'); // 로고 애니메이션 동안 헤더 로고 숨김 → 히어로와 함께 등장
-  requestAnimationFrame(() => {
-    lg.classList.add('play'); setTimeout(() => nums(lg), 2000); setTimeout(() => lg.classList.add('done'), 2700);
-    setTimeout(open, 2900); track('intro_done');
-  });
-  // 사용자가 먼저 스크롤하면 기다리지 않고 바로 펼침 (클릭은 애니메이션을 끊지 않음)
-  ['wheel', 'touchstart'].forEach(ev => window.addEventListener(ev, () => { finish(lg); lg.classList.add('done'); open(); }, { once: true, passive: true }));
+  // 시작 인트로 없음: 히어로(CF)는 처음부터 펼쳐짐. 로고 애니메이션은 로고 밴드가 화면에 절반 이상 들어올 때 1회 재생
+  if (reduce || !('IntersectionObserver' in window)) { finish(lg); lg.classList.add('done'); return; }
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return; io.disconnect();
+    lg.classList.add('play'); setTimeout(() => nums(lg), 2000); setTimeout(() => lg.classList.add('done'), 2700); track('logo_anim_view');
+  }), { threshold: .5 });
+  io.observe(lg);
 }
 
 function init() {
