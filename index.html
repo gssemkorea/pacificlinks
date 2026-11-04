@@ -93,6 +93,9 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgb
 .cf-ctrl button:hover{background:rgba(255,255,255,.14)}
 .cf-ctrl button svg{width:16px;height:16px}
 .cf-ctrl .cf-sound[aria-pressed="true"]{background:#fff;color:#0E1C2E;border-color:#fff}
+.cf-ctrl .cf-sound.nudge{animation:sndNudge 1.8s ease-in-out infinite}
+@keyframes sndNudge{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.45)}50%{box-shadow:0 0 0 7px rgba(255,255,255,0)}}
+@media (prefers-reduced-motion:reduce){.cf-ctrl .cf-sound.nudge{animation:none}}
 .hero-cue{position:absolute;left:0;right:0;bottom:0;z-index:2;height:64px;display:flex;align-items:center;gap:18px;padding:0 var(--cueX,24px);opacity:calc(1 - var(--hp,0) * 3);pointer-events:none}
 .hero-cue b{font-size:clamp(15px,1.25vw,19px);font-weight:800;letter-spacing:-.01em;white-space:nowrap}
 .hero-cue span{font-size:11px;letter-spacing:.24em;color:#A9B7C6;font-weight:700;display:flex;align-items:center;gap:6px}
@@ -399,17 +402,6 @@ body.no-tts .vbtn.tts-only{display:none}
 .promo .btn-primary:hover{background:#3A3225}
 .promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
 /* brand film */
-.cf{margin-top:28px;border-radius:16px;overflow:hidden;background:#000;aspect-ratio:16/9;max-width:100%;position:relative}
-.cf video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
-.cf-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.94);color:#0F2A4A;font-weight:700;padding:14px 24px;border-radius:999px;font-size:15px;border:0;cursor:pointer;font-family:var(--body);box-shadow:0 10px 30px rgba(0,0,0,.35)}
-.cf-play svg{width:22px;height:22px}
-.cf.playing .cf-play{display:none}
-.cf-poster{position:absolute;inset:0;display:block}
-.cf-poster img{width:100%;height:100%;object-fit:cover;opacity:.75}
-.cf-poster .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.92);color:#0F2A4A;font-weight:700;padding:14px 22px;border-radius:999px;font-size:15px}
-.cf-poster .play svg{width:22px;height:22px}
-.cf-poster .ext{display:none;position:absolute;left:50%;bottom:16px;transform:translateX(-50%);font-size:12px;color:#fff;background:rgba(0,0,0,.5);padding:4px 10px;border-radius:999px;white-space:nowrap}
-body.embed-blocked .cf-poster .ext,html.embed-blocked .cf-poster .ext{display:block}
 /* corporate */
 .split{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
 .split .sec-title{grid-column:1/-1;margin-bottom:0}
@@ -658,7 +650,7 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
       <span class="pill">수도권지사</span>
     </a>
     <nav class="anchors" aria-label="섹션">
-      <a href="#products">멤버십</a><a href="#promo">프로모션</a><a href="#cf">CF</a><a href="#corp">법인</a><a href="#courses">골프장</a><a href="#events">행사</a><a href="#faq">FAQ</a><a href="#manager">담당자</a>
+      <a href="#products">멤버십</a><a href="#promo">프로모션</a><a href="#corp">법인</a><a href="#courses">골프장</a><a href="#events">행사</a><a href="#faq">FAQ</a><a href="#manager">담당자</a>
     </nav>
     <button class="ver" id="verBtn" type="button" title="배경 버전 전환 (A 섹션형 / B 전체 배경)" aria-label="배경 버전 전환, 현재 A 섹션형">Ver. A</button>
   </div>
@@ -810,23 +802,6 @@ body.full .band.promo .btn-ghost{border-color:#1E1A14;color:#1E1A14}
         <p class="promo-until muted" id="promoUntil"></p>
         <div class="cta sec-cta"><a class="btn btn-primary" href="#contact" data-track="promo_cta_click" data-product="premium-refund-5y">프리미엄 자료 받기</a><a class="btn btn-ghost" href="#products" data-track="promo_cards_click">상품 카드 보기</a><span data-section-voice="promo"></span></div>
       </div>
-    </div>
-  </section>
-
-  <section class="band dark" id="cf" aria-label="CF 영상">
-    <div class="wrap">
-      <div class="sec-title">
-        <div class="eyebrow">Brand Film</div>
-        <h2>더 넓은 세계로 라운드 하라</h2>
-        <p class="lead" style="color:var(--on-dark-muted)">퍼시픽링스코리아 전속모델 이병헌 CF. 멤버십 한 장으로 전 세계 코스를 잇는다는 약속입니다.</p>
-      </div>
-      <div class="cf" id="cfBox">
-        <video id="cfVideo" controls playsinline preload="metadata" poster="img/cf-poster.jpg">
-          <source src="media/cf.mp4" type="video/mp4">
-        </video>
-        <button class="cf-play" type="button" id="cfPlay" aria-label="영상 재생"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>영상 재생</button>
-      </div>
-      <p class="note" style="color:var(--on-dark-muted)">2025 퍼시픽링스코리아 TV CF · 15초 · <a href="https://www.youtube.com/watch?v=5j4Z3RH6RPM" target="_blank" rel="noopener">유튜브에서 보기 ↗</a></p>
     </div>
   </section>
 
@@ -1278,10 +1253,6 @@ function setVersion(full, remember = true) {
 }
 
 /* ===== 영상: 자체 mp4 > 유튜브 배경 > 포스터 ===== */
-const CF_YOUTUBE_ID = '5j4Z3RH6RPM';
-let EMBED_BLOCKED = /claude\.ai$|claudeusercontent\.com$|claude\.site$/.test(location.hostname); // 아티팩트 미리보기는 외부 iframe 차단
-document.addEventListener('securitypolicyviolation', e => { if (/youtube/.test(e.blockedURI || '')) { EMBED_BLOCKED = true; document.body.classList.add('embed-blocked'); document.querySelectorAll('.hero-media .yt').forEach(f => f.remove()); } });
-if (EMBED_BLOCKED) document.documentElement.classList.add('embed-blocked');
 function setupHeroCF() {
   const hero = document.getElementById('hero'), sc = document.getElementById('heroScroll'), st = document.getElementById('heroSticky');
   const box = document.getElementById('cfHeroBox'), v = document.getElementById('cfHero'), ctrl = document.getElementById('cfHeroCtrl');
@@ -1294,11 +1265,27 @@ function setupHeroCF() {
   const pickSrc = () => (!mqMob.matches && innerWidth * (devicePixelRatio || 1) >= 1600) ? v.dataset.srcHd : v.dataset.srcSd;
   let userPaused = false, started = false, inView = true;
   const setPlaying = on => { box.classList.toggle('playing', on); box.classList.toggle('idle', !on && !started); pau.setAttribute('aria-pressed', String(!on)); pau.querySelector('span').textContent = on ? '일시정지' : '재생'; pau.querySelector('svg').innerHTML = on ? '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>' : '<path d="M8 5v14l11-7z"/>'; };
-  const play = () => { if (!v.src) v.src = pickSrc(); v.play().then(() => { started = true; setPlaying(true); }).catch(() => setPlaying(false)); };
+  const play = () => { if (!v.src) v.src = pickSrc(); v.play().then(() => { started = true; setPlaying(true); }).catch(err => {
+    // 소리 있는 자동재생이 막히면 무음으로 재시도 → 첫 사용자 입력 때 소리 켜기
+    if (!v.muted && err && err.name === 'NotAllowedError') { v.muted = true; unmuteOnGesture(); v.play().then(() => { started = true; setPlaying(true); }).catch(() => setPlaying(false)); }
+    else setPlaying(false);
+  }); };
   v.addEventListener('playing', () => { started = true; setPlaying(true); });
   v.addEventListener('pause', () => setPlaying(false));
-  v.muted = true; v.defaultMuted = true; v.setAttribute('muted', '');
-  setPlaying(false);
+  // 소리 기본 ON: 소리와 함께 재생을 먼저 시도하고, 브라우저가 막으면(첫 방문 자동재생 정책) 무음으로 재생한 뒤
+  // 사용자가 페이지를 처음 클릭·터치·키 입력하는 순간 소리를 켭니다. 사용자가 직접 끈 경우는 기억해서 다시 켜지 않음.
+  let soundOff = false; try { soundOff = localStorage.getItem('plk-cf-sound') === 'off'; } catch (e) {}
+  const syncSnd = () => { const on = !v.muted; snd.setAttribute('aria-pressed', String(on)); snd.querySelector('span').textContent = on ? '소리 끄기' : '소리 켜기'; snd.classList.toggle('nudge', !on && !soundOff); };
+  v.addEventListener('volumechange', syncSnd);
+  let waiting = false;
+  const unmuteOnGesture = () => {
+    if (waiting || soundOff) return; waiting = true;
+    const go = ev => { if (ev.target.closest && ev.target.closest('#cfHeroSound, #cfHeroPause')) return; ['pointerdown', 'keydown', 'touchend'].forEach(t => removeEventListener(t, go, true)); waiting = false; if (!soundOff && v.muted) { v.muted = false; if (v.paused && started && !userPaused) play(); } };
+    ['pointerdown', 'keydown', 'touchend'].forEach(t => addEventListener(t, go, true));
+  };
+  v.muted = soundOff; v.defaultMuted = soundOff;
+  if (soundOff) v.setAttribute('muted', ''); else v.removeAttribute('muted');
+  setPlaying(false); syncSnd();
   // 자동재생: 히어로가 펼쳐질 때 0초부터 (데이터 절약·동작 줄이기는 재생 버튼만)
   const auto = !saveData && !reduce;
   const kick = () => { if (auto && !userPaused) { v.currentTime = 0; play(); } };
@@ -1306,10 +1293,10 @@ function setupHeroCF() {
   playBtn.addEventListener('click', () => { userPaused = false; play(); track('hero_cf_play'); });
   pau.addEventListener('click', () => { if (v.paused) { userPaused = false; play(); } else { userPaused = true; v.pause(); } track('hero_cf_pause'); });
   snd.addEventListener('click', () => {
-    const on = v.muted; v.muted = !on;
-    if (on) { v.currentTime = 0; userPaused = false; play(); }
-    snd.setAttribute('aria-pressed', String(on)); snd.querySelector('span').textContent = on ? '소리 끄기' : '소리 켜기';
-    track(on ? 'hero_cf_sound_on' : 'hero_cf_sound_off');
+    const on = v.muted; v.muted = !on; soundOff = !on;
+    try { localStorage.setItem('plk-cf-sound', on ? 'on' : 'off'); } catch (e) {}
+    if (on && (v.paused || !started)) { userPaused = false; play(); }
+    syncSnd(); track(on ? 'hero_cf_sound_on' : 'hero_cf_sound_off');
   });
   // 화면 밖이면 일시정지, 돌아오면 이어서 (사용자가 직접 멈춘 경우 제외)
   if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(en => {
@@ -1368,11 +1355,6 @@ function setupHeroCF() {
 }
 function setupVideo() {
   setupHeroCF();
-  // CF 섹션: 자체 호스팅 CF 재생
-  const cv = document.getElementById('cfVideo'), cb = document.getElementById('cfBox');
-  document.getElementById('cfPlay').addEventListener('click', () => { cb.classList.add('playing'); cv.play().catch(() => {}); track('cf_play_click'); });
-  cv.addEventListener('play', () => cb.classList.add('playing'));
-  cv.addEventListener('ended', () => cb.classList.remove('playing'));
 }
 
 /* ===== 상품 설명서 라이트박스 ===== */
